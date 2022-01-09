@@ -1,0 +1,14 @@
+.container {
+    margin-top: 64px;
+    display: flex;
+    justify-content: center;
+
+    form {
+        width: 300px;
+    }
+        
+    button {
+        width: 100%;
+        margin-bottom: 16px;
+    }
+}

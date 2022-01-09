@@ -1,0 +1,17 @@
+.container {
+    margin-top: 64px;
+    display: flex;
+    justify-content: center;
+
+    form {
+        width: 300px;
+
+        nz-date-picker {
+            width: 100%;
+        }
+    }
+    
+    .register-are {
+        margin-bottom: 8px;
+    }
+}
