@@ -1,0 +1,11 @@
+.tab-menu {
+    margin-bottom: 16px;
+}
+
+nz-comment {
+    ::ng-deep {
+        .ant-comment-inner {
+            margin-top: 0;
+        }
+    }
+}

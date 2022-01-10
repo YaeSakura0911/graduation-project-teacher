@@ -9,11 +9,7 @@
     </nz-header>
     
     <nz-content class="outer-content">
-        <nz-breadcrumb>
-            <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-            <nz-breadcrumb-item>List</nz-breadcrumb-item>
-            <nz-breadcrumb-item>App</nz-breadcrumb-item>
-        </nz-breadcrumb>
+        <nz-breadcrumb [nzAutoGenerate]="true"></nz-breadcrumb>
         <div class="inner-content">
             <router-outlet></router-outlet>
         </div>

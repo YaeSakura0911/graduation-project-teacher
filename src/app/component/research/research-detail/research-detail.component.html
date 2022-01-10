@@ -1,0 +1,154 @@
+<div class="container">
+    <nz-tabset nzCentered>
+        <nz-tab nzTitle="概述">
+            <div nz-row [nzGutter]="16" class="tab-container" style="display: flex;">
+                <div nz-col nzSpan="6">
+                    <h4 nz-typography>Concurrent, parallel and distributed</h4>
+                    <p nzType="secondary" nz-typography>Concurrent, parallel and distributedConcurrent, parallel and
+                        distributedConcurrent, parallel and distributedConcurrent, parallel and distributedConcurrent,
+                        parallel and distributedConcurrent, parallel and distributedConcurrent, parallel and distributed
+                    </p>
+                </div>
+                <div nz-col nzSpan="9">
+                    <h4 nz-typography>动态</h4>
+                    <nz-divider></nz-divider>
+                    <div style="margin-bottom: 32px;">
+                        <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
+                            <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
+                            <nz-comment-content>
+                                <p nz-typography>提交了开题报告</p>
+                            </nz-comment-content>
+                        </nz-comment>
+                        <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
+                            <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
+                            <nz-comment-content>
+                                <p nz-typography>提交了开题报告</p>
+                            </nz-comment-content>
+                        </nz-comment>
+                        <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
+                            <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
+                            <nz-comment-content>
+                                <p nz-typography>提交了开题报告</p>
+                            </nz-comment-content>
+                        </nz-comment>
+                    </div>
+                </div>
+                <div nz-col nzSpan="9">
+                    <h4 nz-typography>任务</h4>
+                    <nz-divider></nz-divider>
+                    <nz-timeline nzMode="alternate">
+                        <nz-timeline-item nzColor="green">Create a services site 2015-09-01</nz-timeline-item>
+                        <nz-timeline-item nzColor="green">Solve initial network problems 2015-09-01</nz-timeline-item>
+                        <nz-timeline-item nzColor="green">
+                            <p>Solve initial network problems 2015-09-01</p>
+                        </nz-timeline-item>
+                        <nz-timeline-item>
+                            <p>Technical testing 2015-09-01</p>
+                        </nz-timeline-item>
+                        <nz-timeline-item nzColor="gray">
+                            <p>Technical testing 2015-09-01</p>
+                        </nz-timeline-item>
+                        <nz-timeline-item nzColor="gray">
+                            <p>Technical testing 2015-09-01</p>
+                        </nz-timeline-item>
+                    </nz-timeline>
+                </div>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="任务">
+            <div class="tab-container">
+                <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
+                    <div nz-col nzSpan="8">
+                        <input nz-input placeholder="搜索你的任务" />
+                    </div>
+                    <div nz-col nzSpan="2">
+                        <button nzType="primary" nz-button>添加任务</button>
+                    </div>
+                </div>
+                <nz-table #basicTable>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>任务名称</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of basicTable.data">
+                            <td>{{data.name}}</td>
+                            <td>{{data.age}}</td>
+                            <td>{{data.address}}</td>
+                            <td>
+                                <a>Action 一 {{data.name}}</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a>Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="学生">
+            <div class="tab-container">
+                <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
+                    <div nz-col nzSpan="8">
+                        <input nz-input placeholder="搜索你的学生" />
+                    </div>
+                    <div nz-col nzSpan="2">
+                        <button nzType="primary" nz-button>添加学生</button>
+                    </div>
+                </div>
+                <nz-table #basicTable>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>姓名</th>
+                            <th>入学年份</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of basicTable.data">
+                            <td>{{data.name}}</td>
+                            <td>{{data.age}}</td>
+                            <td>{{data.address}}</td>
+                            <td>
+                                <a>Action 一 {{data.name}}</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a>Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </nz-tab>
+        <nz-tab nzTitle="设置">
+            <div class="tab-container" style="width: 50%; margin: 0 auto;">
+                <h4 nz-typography>基本信息</h4>
+                <nz-divider></nz-divider>
+                <form nz-form style="margin-bottom: 32px;">
+                    <nz-form-item>
+                        <nz-form-label [nzSm]="4" [nzXs]="24">研究名称</nz-form-label>
+                        <nz-form-control [nzSm]="20" [nzXs]="24">
+                            <input type="text" nz-input />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-label [nzSm]="4" [nzXs]="24">研究内容</nz-form-label>
+                        <nz-form-control [nzSm]="20" [nzXs]="24">
+                            <textarea nz-input></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item nz-row class="register-area">
+                        <nz-form-control [nzSpan]="20" [nzOffset]="4">
+                            <button nz-button nzType="primary">保存</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+                <h4 nz-typography>管理员</h4>
+                <nz-divider></nz-divider>
+            </div>
+        </nz-tab>
+    </nz-tabset>
+</div>
