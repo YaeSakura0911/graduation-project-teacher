@@ -19,6 +19,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 // 数据展示
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCommentModule } from 'ng-zorro-antd/comment';
 import { NzListModule } from 'ng-zorro-antd/list';
@@ -43,6 +44,7 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
         NzFormModule,
         NzInputModule,
         NzAvatarModule,
+        NzBadgeModule,
         NzCardModule,
         NzCommentModule,
         NzListModule,

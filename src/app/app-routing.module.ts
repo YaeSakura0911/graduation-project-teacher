@@ -10,6 +10,11 @@ const routes: Routes = [
         path: 'research',
         data: { breadcrumb: '研究列表' },
         loadChildren: () => import('./module/research/research.module').then(m => m.ResearchModule)
+    },
+    {
+        path: 'task',
+        data: { breadcrumb: '任务列表' },
+        loadChildren: () => import('./module/task/task.module').then(m => m.TaskModule)
     }
 ];
 

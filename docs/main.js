@@ -19,12 +19,17 @@ __webpack_require__.r(__webpack_exports__);
 const routes = [
     {
         path: 'user',
-        loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-cdk-resize-observer_mjs-node_module-1d5ab7"), __webpack_require__.e("src_app_module_user_user_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./module/user/user.module */ 7340)).then(m => m.UserModule)
+        loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-cdk-resize-observer_mjs-node_module-c7289c"), __webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-form_mjs"), __webpack_require__.e("src_app_module_user_user_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./module/user/user.module */ 7340)).then(m => m.UserModule)
     },
     {
         path: 'research',
         data: { breadcrumb: '研究列表' },
-        loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-cdk-resize-observer_mjs-node_module-1d5ab7"), __webpack_require__.e("src_app_module_research_research_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./module/research/research.module */ 5492)).then(m => m.ResearchModule)
+        loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-cdk-resize-observer_mjs-node_module-c7289c"), __webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-badge_mjs-node_modules_ng-zorro-ant-a77a5c"), __webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-form_mjs"), __webpack_require__.e("src_app_module_research_research_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./module/research/research.module */ 5492)).then(m => m.ResearchModule)
+    },
+    {
+        path: 'task',
+        data: { breadcrumb: '任务列表' },
+        loadChildren: () => Promise.all(/*! import() */[__webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-cdk-resize-observer_mjs-node_module-c7289c"), __webpack_require__.e("default-node_modules_ng-zorro-antd_fesm2015_ng-zorro-antd-badge_mjs-node_modules_ng-zorro-ant-a77a5c"), __webpack_require__.e("src_app_module_task_task_module_ts")]).then(__webpack_require__.bind(__webpack_require__, /*! ./module/task/task.module */ 6889)).then(m => m.TaskModule)
     }
 ];
 class AppRoutingModule {

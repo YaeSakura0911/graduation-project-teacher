@@ -2,10 +2,8 @@
     margin-bottom: 16px;
 }
 
-nz-comment {
-    ::ng-deep {
-        .ant-comment-inner {
-            margin-top: 0;
-        }
+nz-table {
+    th, td {
+        text-align: center;
     }
 }
