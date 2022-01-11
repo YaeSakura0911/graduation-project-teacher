@@ -1,0 +1,50 @@
+<div class="container">
+    <div nz-row class="menu" [nzGutter]="16" nzJustify="center">
+        <div nz-col nzSpan="4">
+            <input nz-input placeholder="搜索你的学生" />
+        </div>
+        <div nz-col nzSpan="4">
+            <nz-select nzPlaceHolder="研究方向" nzAllowClear>
+                <nz-option nzValue="1" nzLabel="Artificial intelligence"></nz-option>
+                <nz-option nzValue="2" nzLabel="Computer graphics and visualization"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="4">
+            <nz-select nzPlaceHolder="入学年份" nzAllowClear>
+                <nz-option nzValue="1" nzLabel="2018"></nz-option>
+                <nz-option nzValue="2" nzLabel="2019"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col nzSpan="2">
+            <button nzType="primary" (click)="openStudentDrawer()" nz-button>添加学生</button>
+        </div>
+    </div>
+    <nz-table #basicTable>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>姓名</th>
+                <th>研究方向</th>
+                <th>入学年份</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>姜凯文</td>
+                <td></td>
+                <td>2018</td>
+                <td>
+                    <a>查看</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a (click)="openStudentDrawer()">编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a>删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</div>
+
+<app-student-form #studentFormDrawer></app-student-form>

@@ -15,6 +15,11 @@ const routes: Routes = [
         path: 'task',
         data: { breadcrumb: '任务列表' },
         loadChildren: () => import('./module/task/task.module').then(m => m.TaskModule)
+    },
+    {
+        path: 'student',
+        data: { breadcrumb: '学生列表' },
+        loadChildren: () => import('./module/student/student.module').then(m => m.StudentModule)
     }
 ];
 

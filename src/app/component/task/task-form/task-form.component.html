@@ -1,0 +1,23 @@
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
+    nzTitle="创建任务" [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
+    <form nz-form *nzDrawerContent>
+        <nz-form-item>
+            <nz-form-label>任务名称</nz-form-label>
+            <nz-form-control>
+                <input nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label>任务内容</nz-form-label>
+            <nz-form-control>
+                <textarea nz-input [nzAutosize]="{ minRows: 4, maxRows: 4 }"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
+            <button nz-button nzType="primary" (click)="closeDrawer()">保存</button>
+        </div>
+    </ng-template>
+</nz-drawer>

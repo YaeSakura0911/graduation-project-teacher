@@ -1,10 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ResearchListComponent } from 'src/app/component/research/research-list/research-list.component';
+// Research模块的组件
+import { ResearchAddComponent } from 'src/app/component/research/research-add/research-add.component';
 import { ResearchDetailComponent } from 'src/app/component/research/research-detail/research-detail.component';
+import { ResearchListComponent } from 'src/app/component/research/research-list/research-list.component';
 
+// Research模块路由
 import { ResearchRoutingModule } from './research-routing.module';
+
+// 自定义模块
+import { TaskModule } from '../task/task.module';
+import { StudentModule } from '../student/student.module';
 
 // 通用
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -26,16 +33,20 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTimelineModule } from 'ng-zorro-antd/timeline';
-
+// 反馈
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 @NgModule({
     declarations: [
-        ResearchListComponent,
-        ResearchDetailComponent
+        ResearchAddComponent,
+        ResearchDetailComponent,
+        ResearchListComponent
     ],
     imports: [
         CommonModule,
         ResearchRoutingModule,
+        TaskModule,
+        StudentModule,
         NzButtonModule,
         NzTypographyModule,
         NzDividerModule,
@@ -50,7 +61,9 @@ import { NzTimelineModule } from 'ng-zorro-antd/timeline';
         NzListModule,
         NzTableModule,
         NzTabsModule,
-        NzTimelineModule
+        NzTimelineModule,
+        NzDrawerModule
     ]
 })
+
 export class ResearchModule { }

@@ -62,7 +62,7 @@
                         <input nz-input placeholder="搜索你的任务" />
                     </div>
                     <div nz-col nzSpan="2">
-                        <button nzType="primary" nz-button>添加任务</button>
+                        <button nzType="primary" (click)="openTaskDrawer()" nz-button>创建任务</button>
                     </div>
                 </div>
                 <nz-table #basicTable>
@@ -84,9 +84,11 @@
                                 <nz-badge nzStatus="processing" nzText="进行中"></nz-badge>
                             </td>
                             <td>
+                                <a>发布</a>
+                                <nz-divider nzType="vertical"></nz-divider>
                                 <a routerLink="/task/detail">查看</a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a>编辑</a>
+                                <a (click)="openTaskDrawer()">编辑</a>
                                 <nz-divider nzType="vertical"></nz-divider>
                                 <a>删除</a>
                             </td>
@@ -102,7 +104,7 @@
                         <input nz-input placeholder="搜索你的学生" />
                     </div>
                     <div nz-col nzSpan="2">
-                        <button nzType="primary" nz-button>添加学生</button>
+                        <button nzType="primary" (click)="openStudentDrawer()" nz-button>添加学生</button>
                     </div>
                 </div>
                 <nz-table #basicTable>
@@ -115,14 +117,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let data of basicTable.data">
-                            <td>{{data.name}}</td>
-                            <td>{{data.age}}</td>
-                            <td>{{data.address}}</td>
+                        <tr>
+                            <td>1</td>
+                            <td>姜凯文</td>
+                            <td>2018</td>
                             <td>
-                                <a>Action 一 {{data.name}}</a>
+                                <a>查看</a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a>Delete</a>
+                                <a (click)="openStudentDrawer()">编辑</a>
+                                <nz-divider nzType="vertical"></nz-divider>
+                                <a>删除</a>
                             </td>
                         </tr>
                     </tbody>
@@ -158,3 +162,6 @@
         </nz-tab>
     </nz-tabset>
 </div>
+
+<app-task-form #taskDrawer></app-task-form>
+<app-student-form #studentDrawer></app-student-form>
