@@ -14,10 +14,14 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { zh_CN } from 'ng-zorro-antd/i18n';
 
 // 布局
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 // 导航
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+// 数据展示
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 
 registerLocaleData(zh);
 
@@ -31,11 +35,14 @@ registerLocaleData(zh);
         FormsModule,
         HttpClientModule,
         BrowserAnimationsModule,
+        NzGridModule,
         NzLayoutModule,
         NzBreadCrumbModule,
-        NzMenuModule
+        NzDropDownModule,
+        NzMenuModule,
+        NzAvatarModule
     ],
-    providers: [{ provide: NZ_I18N, useValue: zh_CN}],
+    providers: [{ provide: NZ_I18N, useValue: zh_CN }],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

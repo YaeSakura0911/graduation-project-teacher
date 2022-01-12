@@ -1,13 +1,27 @@
 <nz-layout class="outer-layout">
     <nz-header>
-        <div class="logo"></div>
-        <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
-            <li routerLink="/research" nz-menu-item nzMatchRouter>研究</li>
-            <li routerLink="/task" nz-menu-item nzMatchRouter>任务</li>
-            <li routerLink="/student" nz-menu-item nzMatchRouter>学生</li>
-        </ul>
+        <div nz-row>
+            <div nz-col nzSpan="12">
+                <div class="logo"></div>
+                <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+                    <li routerLink="/research" nz-menu-item nzMatchRouter>研究</li>
+                    <li routerLink="/task" nz-menu-item nzMatchRouter>任务</li>
+                    <li routerLink="/student" nz-menu-item nzMatchRouter>学生</li>
+                </ul>
+            </div>
+            <div nz-col nzSpan="2" nzOffset="10" style="text-align: center;" nzTrigger="click" [nzDropdownMenu]="menu"
+                nz-dropdown>
+                <nz-avatar nzText="李" nzSize="large"></nz-avatar>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu>
+                        <li nz-menu-item>个人信息</li>
+                        <li nz-menu-item>退出登录</li>
+                    </ul>
+                </nz-dropdown-menu>
+            </div>
+        </div>
     </nz-header>
-    
+
     <nz-content class="outer-content">
         <nz-breadcrumb [nzAutoGenerate]="true"></nz-breadcrumb>
         <div class="inner-content">
@@ -18,7 +32,7 @@
                 <router-outlet></router-outlet>
             </nz-content>
         </nz-layout> -->
-        
+
     </nz-content>
 
     <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>

@@ -12,8 +12,18 @@
         float: left;
     }
 
+    
+
     .header-menu {
         line-height: 64px
+    }
+
+    nz-avatar {
+        vertical-align: middle;
+    }
+
+    nz-avatar:hover {
+        cursor: pointer;
     }
 
     .outer-content {
