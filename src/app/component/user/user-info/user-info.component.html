@@ -1,1 +1,58 @@
-<p>user-info works!</p>
+<div class="container" style="width: 50%; margin: 0 auto;">
+    <h3 nz-typography>个人信息</h3>
+    <nz-divider></nz-divider>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">性别</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <nz-select>
+                    <nz-option nzValue="0" nzLabel="男"></nz-option>
+                    <nz-option nzValue="1" nzLabel="女"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">电话</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="tel" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">邮箱</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="email" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzSpan="10" nzOffset="4">
+                <button nzType="primary" nz-button>保存</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <nz-divider></nz-divider>
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">原密码</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="password" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">新密码</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="password" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">确认密码</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="password" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzSpan="10" nzOffset="4">
+                <button nzType="primary" nz-button>保存</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>
