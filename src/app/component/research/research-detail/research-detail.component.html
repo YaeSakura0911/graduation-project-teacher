@@ -1,30 +1,16 @@
 <div class="container">
-    <nz-tabset nzCentered>
+    <nz-tabset (nzSelectedIndexChange)="tabChange($event)" nzCentered>
+        <!-- 概述选项卡 -->
         <nz-tab nzTitle="概述">
             <div nz-row [nzGutter]="16" class="tab-container" style="display: flex;">
                 <div nz-col nzSpan="6">
-                    <h4 nz-typography>Concurrent, parallel and distributed</h4>
-                    <p nzType="secondary" nz-typography>Concurrent, parallel and distributedConcurrent, parallel and
-                        distributedConcurrent, parallel and distributedConcurrent, parallel and distributedConcurrent,
-                        parallel and distributedConcurrent, parallel and distributedConcurrent, parallel and distributed
-                    </p>
+                    <h4 nz-typography>{{ researchName }}</h4>
+                    <p nzType="secondary" nz-typography>{{ researchDescription }}</p>
                 </div>
                 <div nz-col nzSpan="9">
                     <h4 nz-typography>动态</h4>
                     <nz-divider></nz-divider>
                     <div style="margin-bottom: 32px;">
-                        <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
-                            <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
-                            <nz-comment-content>
-                                <p nz-typography>提交了开题报告</p>
-                            </nz-comment-content>
-                        </nz-comment>
-                        <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
-                            <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
-                            <nz-comment-content>
-                                <p nz-typography>提交了开题报告</p>
-                            </nz-comment-content>
-                        </nz-comment>
                         <nz-comment nzAuthor="姜凯文" [nzDatetime]="time">
                             <nz-avatar nzText="姜" nz-comment-avatar></nz-avatar>
                             <nz-comment-content>
@@ -55,20 +41,28 @@
                 </div>
             </div>
         </nz-tab>
+
+        <!-- 任务选项卡 -->
         <nz-tab nzTitle="任务">
             <div class="tab-container">
                 <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
-                    <div nz-col nzSpan="8">
+                    <div nz-col [nzSpan]="4">
                         <input nz-input placeholder="搜索你的任务" />
                     </div>
-                    <div nz-col nzSpan="2">
-                        <button nzType="primary" (click)="openTaskDrawer()" nz-button>创建任务</button>
+                    <div nz-col [nzSpan]="4">
+                        <nz-select [(ngModel)]="taskState" nzPlaceHolder="按任务状态筛选" nzAllowClear>
+                            <nz-option [nzValue]="0" nzLabel="未发布"></nz-option>
+                            <nz-option [nzValue]="1" nzLabel="进行中"></nz-option>
+                            <nz-option [nzValue]="2" nzLabel="已完成"></nz-option>
+                        </nz-select>
+                    </div>
+                    <div nz-col [nzSpan]="2">
+                        <button nzType="primary" (click)="openTaskDrawer(0, researchId)" nz-button>创建任务</button>
                     </div>
                 </div>
-                <nz-table #basicTable>
+                <nz-table #taskTable [nzData]="taskList">
                     <thead>
                         <tr>
-                            <th>序号</th>
                             <th>任务名称</th>
                             <th>截止日期</th>
                             <th>状态</th>
@@ -76,10 +70,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>测试任务</td>
-                            <td>2022-06-01</td>
+                        <tr *ngFor="let task of taskTable.data">
+                            <td>{{ task.taskName }}</td>
+                            <td>{{ task.endTime | date: "yyyy-MM-dd" }}</td>
                             <td>
                                 <nz-badge nzStatus="processing" nzText="进行中"></nz-badge>
                             </td>
@@ -88,66 +81,80 @@
                                 <nz-divider nzType="vertical"></nz-divider>
                                 <a routerLink="/task/detail">查看</a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a (click)="openTaskDrawer()">编辑</a>
+                                <a (click)="openTaskDrawer(task.taskId, 0)">编辑</a>
                                 <nz-divider nzType="vertical"></nz-divider>
                                 <a>删除</a>
                             </td>
                         </tr>
                     </tbody>
                 </nz-table>
+                <br>
+                <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="total" [nzPageSize]="pageSize"
+                    (nzPageIndexChange)="pageIndexChange(0)" (nzPageSizeChange)="pageSizeChange(0)" nzShowSizeChanger>
+                </nz-pagination>
             </div>
         </nz-tab>
+
+        <!-- 学生选项卡 -->
         <nz-tab nzTitle="学生">
             <div class="tab-container">
                 <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
                     <div nz-col nzSpan="8">
-                        <input nz-input placeholder="搜索你的学生" />
+                        <input [(ngModel)]="studentName" placeholder="搜索你的学生" nz-input />
                     </div>
-                    <div nz-col nzSpan="2">
-                        <button nzType="primary" (click)="openStudentDrawer()" nz-button>添加学生</button>
+                    <div nz-col nzSpan="4">
+                        <nz-date-picker nzMode="year" [nzDisabledDate]="disabledDate" [(ngModel)]="studentYear"
+                            nzPlaceHolder="按入学年份筛选"></nz-date-picker>
                     </div>
                 </div>
-                <nz-table #basicTable>
+                <nz-table #studentTable [nzData]="studentList" [nzFrontPagination]="false">
                     <thead>
                         <tr>
-                            <th>序号</th>
                             <th>姓名</th>
                             <th>入学年份</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>姜凯文</td>
-                            <td>2018</td>
+                        <tr *ngFor="let student of studentTable.data">
+                            <td>{{ student.studentName }}</td>
+                            <td>{{ student.studentYear | date: "yyyy" }}</td>
                             <td>
-                                <a>查看</a>
+                                <a (click)="openStudentDetailDrawer(student.studentId)">查看</a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a (click)="openStudentDrawer()">编辑</a>
+                                <a (click)="openStudentFormDrawer(student.studentId)">编辑</a>
                                 <nz-divider nzType="vertical"></nz-divider>
-                                <a>删除</a>
+                                <a nz-popconfirm nzPopconfirmTitle="确认删除当前学生?"
+                                    nzPopconfirmPlacement="bottom" (nzOnCancel)="deleteStudent(student.studentId)">
+                                    删除
+                                </a>
                             </td>
                         </tr>
                     </tbody>
                 </nz-table>
+                <br>
+                <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="total" [nzPageSize]="pageSize"
+                    (nzPageIndexChange)="pageIndexChange(1)" (nzPageSizeChange)="pageSizeChange(1)" nzShowSizeChanger>
+                </nz-pagination>
             </div>
         </nz-tab>
+
+        <!-- 设置选项卡 -->
         <nz-tab nzTitle="设置">
             <div class="tab-container" style="width: 50%; margin: 0 auto;">
                 <h4 nz-typography>基本信息</h4>
                 <nz-divider></nz-divider>
-                <form nz-form style="margin-bottom: 32px;">
+                <form nz-form (ngSubmit)="updateResearch()" style="margin-bottom: 32px;">
                     <nz-form-item>
-                        <nz-form-label [nzSm]="4" [nzXs]="24">研究名称</nz-form-label>
-                        <nz-form-control [nzSm]="20" [nzXs]="24">
-                            <input type="text" nz-input />
+                        <nz-form-label [nzSpan]="4">研究名称</nz-form-label>
+                        <nz-form-control [nzSpan]="20">
+                            <input type="text" name="researchName" [(ngModel)]="researchName" nz-input />
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
-                        <nz-form-label [nzSm]="4" [nzXs]="24">研究内容</nz-form-label>
-                        <nz-form-control [nzSm]="20" [nzXs]="24">
-                            <textarea nz-input></textarea>
+                        <nz-form-label [nzSpan]="4">研究内容</nz-form-label>
+                        <nz-form-control [nzSpan]="20">
+                            <textarea name="researchDescription" [(ngModel)]="researchDescription" nz-input></textarea>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item nz-row class="register-area">
@@ -156,12 +163,31 @@
                         </nz-form-control>
                     </nz-form-item>
                 </form>
-                <h4 nz-typography>管理员</h4>
+
+                <br>
+
+                <h4 nz-typography>危险区域</h4>
                 <nz-divider></nz-divider>
+                <div nz-row>
+                    <div nz-col [nzSpan]="22">
+                        <p nz-typography>请谨慎操作, 这将删除你的研究, 且不能找回. </p>
+                    </div>
+                    <div nz-col [nzSpan]="2">
+                        <button nzType="default" (click)="toggleDeleteResearchModelVisible()" nzDanger
+                            nz-button>删除研究</button>
+                    </div>
+                </div>
+                <nz-modal [(nzVisible)]="deleteResearchModelVisible" nzTitle="是否要删除当前研究?"
+                    (nzOnCancel)="toggleDeleteResearchModelVisible()" (nzOnOk)="deleteResearch()">
+                    <ng-container *nzModalContent>
+                        <p nz-typography>当前操作不可逆转, 请谨慎操作!</p>
+                    </ng-container>
+                </nz-modal>
             </div>
         </nz-tab>
     </nz-tabset>
 </div>
 
 <app-task-form #taskDrawer></app-task-form>
-<app-student-form #studentDrawer></app-student-form>
+<app-student-detail #studentDetailDrawer></app-student-detail>
+<app-student-form #studentFormDrawer></app-student-form>

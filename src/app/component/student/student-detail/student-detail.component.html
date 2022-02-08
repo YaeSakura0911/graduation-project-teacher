@@ -1,0 +1,17 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="drawerVisible" [nzWidth]="560" nzPlacement="right" nzTitle="学生详情"
+           (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+        <nz-descriptions [nzColumn]="1">
+            <nz-descriptions-item nzTitle="学生学号">{{ studentNo }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="学生姓名">{{ studentName }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="入学年份">{{ studentYear | date:'yyyy' }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="研究方向">{{ researchName }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="学生性别">
+                <span *ngIf="studentGender == '0'">男</span>
+                <span *ngIf="studentGender == '1'">女</span>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="学生电话">{{ studentTelephone }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="学生邮箱">{{ studentEmail }}</nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+</nz-drawer>

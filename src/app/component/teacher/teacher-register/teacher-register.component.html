@@ -1,0 +1,54 @@
+<div class="container">
+    <form nz-form [formGroup]="registerForm" (ngSubmit)="registerTeacher()">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>姓名</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="请输入你的姓名">
+                <input type="text" id="name" formControlName="teacherName" maxlength="10" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="gender" nzRequired>性别</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="请选择你的性别">
+                <nz-select nzId="gender" formControlName="teacherGender">
+                    <nz-option nzValue="0" nzLabel="男"></nz-option>
+                    <nz-option nzValue="1" nzLabel="女"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="year" nzRequired>入职年份</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="请选择你的入职年份">
+                <nz-date-picker nzMode="year" nzId="year" formControlName="teacherYear" [nzDisabledDate]="disabledDate"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="telephone">电话</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="">
+                <input type="tel" id="telephone" formControlName="teacherTelephone" maxlength="11" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="email">电子邮箱</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="当前电子邮箱不合法">
+                <input type="email" id="email" formControlName="teacherEmail" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="password" nzRequired>密码</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzErrorTip="请输入密码">
+                <input type="password" id="password" formControlName="teacherPassword" maxlength="20" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="checkPassword" nzRequired>确认密码</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+                <input type="password" id="checkPassword" formControlName="checkPassword" maxlength="20" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row class="register-area">
+            <nz-form-control [nzSpan]="18" [nzOffset]="6">
+                <button nz-button nzType="primary">注册</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>

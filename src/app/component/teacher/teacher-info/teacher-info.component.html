@@ -1,0 +1,32 @@
+<div class="container" style="width: 50%; margin: 0 auto;">
+    <h3 nz-typography>个人信息</h3>
+    <nz-divider></nz-divider>
+    <form nz-form (ngSubmit)="updateTeacher()">
+        <nz-form-item>
+            <nz-form-label nzSpan="4">性别</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <nz-select name="teacherGender" [(ngModel)]="teacherGender">
+                    <nz-option [nzValue]="0" nzLabel="男"></nz-option>
+                    <nz-option [nzValue]="1" nzLabel="女"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">电话</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="tel" name="teacherTelephone" [(ngModel)]="teacherTelephone" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzSpan="4">邮箱</nz-form-label>
+            <nz-form-control nzSpan="10">
+                <input type="email" name="teacherEmail" [(ngModel)]="teacherEmail" nz-input />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control nzSpan="10" nzOffset="4">
+                <button nzType="primary" nz-button>保存</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div>

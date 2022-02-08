@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { TaskDetailComponent } from 'src/app/component/task/task-detail/task-detail.component';
-import { TaskListComponent } from 'src/app/component/task/task-list/task-list.component';
+import {TaskCompleteComponent} from "../../component/task/task-complete/task-complete.component";
+import {TaskListComponent} from 'src/app/component/task/task-list/task-list.component';
 
 const routes: Routes = [
     {
@@ -10,9 +10,9 @@ const routes: Routes = [
         component: TaskListComponent
     },
     {
-        path: 'detail',
-        data: { breadcrumb: '任务详情' },
-        component: TaskDetailComponent
+        path: 'complete',
+        data: {breadcrumb: '完成情况'},
+        component: TaskCompleteComponent
     }
 ];
 
@@ -20,4 +20,5 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]
 })
-export class TaskRoutingModule { }
+export class TaskRoutingModule {
+}

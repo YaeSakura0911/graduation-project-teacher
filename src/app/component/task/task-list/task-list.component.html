@@ -1,53 +1,85 @@
 <div class="container">
+    <!-- 菜单 -->
     <div nz-row class="menu" [nzGutter]="16" nzJustify="center">
-        <div nz-col nzSpan="4">
-            <input nz-input placeholder="搜索你的任务" />
+        <div nz-col [nzSpan]="4">
+            <input [(ngModel)]="taskName" (ngModelChange)="queryTaskList()" placeholder="搜索你的任务" nz-input/>
         </div>
-        <div nz-col nzSpan="4">
-            <nz-select nzPlaceHolder="研究方向" nzAllowClear>
-                <nz-option nzValue="1" nzLabel="Artificial intelligence"></nz-option>
-                <nz-option nzValue="2" nzLabel="Computer graphics and visualization"></nz-option>
+        <div nz-col [nzSpan]="4">
+            <nz-select [(ngModel)]="researchId" (ngModelChange)="queryTaskList()" nzPlaceHolder="按研究方向筛选" nzAllowClear>
+                <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
+                           [nzLabel]="research.researchName"></nz-option>
             </nz-select>
         </div>
-        <div nz-col nzSpan="4">
-            <nz-select nzPlaceHolder="任务状态" nzAllowClear>
-                <nz-option nzValue="1" nzLabel="未发布"></nz-option>
-                <nz-option nzValue="2" nzLabel="进行中"></nz-option>
-                <nz-option nzValue="3" nzLabel="已完成"></nz-option>
+        <div nz-col [nzSpan]="4">
+            <nz-select [(ngModel)]="taskState" (ngModelChange)="queryTaskList()" nzPlaceHolder="按任务状态筛选" nzAllowClear>
+                <nz-option [nzValue]="1" nzLabel="未发布"></nz-option>
+                <nz-option [nzValue]="2" nzLabel="进行中"></nz-option>
+                <nz-option [nzValue]="3" nzLabel="已完成"></nz-option>
             </nz-select>
         </div>
-        <div nz-col nzSpan="2">
-            <button nzType="primary" (click)="openTaskDrawer()" nz-button>创建任务</button>
+        <div nz-col [nzSpan]="2">
+            <button nzType="primary" (click)="openTaskFormDrawer(0, 0)" nz-button>创建任务</button>
         </div>
     </div>
-    <nz-table #basicTable>
+
+    <!-- 表格 -->
+    <nz-table #basicTable [nzData]="taskList" [nzFrontPagination]="false">
         <thead>
-            <tr>
-                <th>序号</th>
-                <th>任务标题</th>
-                <th>研究方向</th>
-                <th>任务状态</th>
-                <th>操作</th>
-            </tr>
+        <tr>
+            <th>任务标题</th>
+            <th>研究方向</th>
+            <th>任务状态</th>
+            <th>截止时间</th>
+            <th>操作</th>
+        </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>测试任务</td>
-                <td></td>
-                <td>
-                    <nz-badge nzStatus="processing" nzText="进行中"></nz-badge>
-                </td>
-                <td>
-                    <a>查看</a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a (click)="openTaskDrawer()">编辑</a>
-                    <nz-divider nzType="vertical"></nz-divider>
-                    <a>删除</a>
-                </td>
-            </tr>
+        <tr *ngFor="let task of basicTable.data">
+            <td>{{ task.taskName }}</td>
+            <td>{{ task.researchName }}</td>
+            <td>
+                <nz-badge *ngIf="task.taskState == 1" nzStatus="default" nzText="未发布"></nz-badge>
+                <nz-badge *ngIf="task.taskState == 2" nzStatus="processing" nzText="进行中"></nz-badge>
+                <nz-badge *ngIf="task.taskState == 3" nzStatus="success" nzText="已完成"></nz-badge>
+            </td>
+            <td>{{ task.endTime | date:"yyyy-MM-dd HH:mm:ss" }}</td>
+            <td>
+                <a [nzDisabled]="task.taskState == 2 || task.taskState == 3" (click)="createTplModal(tplTitle, tplContent, tplFooter, task.taskId)" nz-typography>发布</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a (click)="openTaskDetailDrawer(task.taskId)">查看</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a [routerLink]="['/task/complete']" [queryParams]="{taskId: task.taskId}">批改</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a [nzDisabled]="task.taskState == 2 || task.taskState == 3" (click)="openTaskFormDrawer(task.taskId, task.researchId)" nz-typography>编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a nzPopconfirmTitle="确定删除当前任务?" nzPopconfirmPlacement="bottom"
+                   (nzOnConfirm)="deleteTask(task.taskId)" [nzDisabled]="task.taskState == 2 || task.taskState == 3" nz-popconfirm nz-typography>
+                    删除
+                </a>
+            </td>
+        </tr>
         </tbody>
     </nz-table>
+
+    <br>
+
+    <!-- 分页 -->
+    <nz-pagination [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzTotal]="total" [nzShowSizeChanger]="true"
+                   (nzPageIndexChange)="pageIndexChange()" (nzPageSizeChange)="pageSizeChange()"></nz-pagination>
 </div>
 
+<ng-template #tplTitle>
+    <span>发布任务</span>
+</ng-template>
+<ng-template #tplContent>
+    <nz-date-picker [(ngModel)]="endTime" nzFormat="yyyy-MM-dd HH:mm:ss" nzPlaceHolder="请选择截止日期" nzShowTime></nz-date-picker>
+</ng-template>
+<ng-template #tplFooter let-ref="modalRef" let-params>
+    <button nz-button (click)="ref.destroy()">取消</button>
+    <button nz-button nzType="primary" (click)="updateTask(ref, params.value)">
+        发布
+    </button>
+</ng-template>
+
 <app-task-form #taskFormDrawer></app-task-form>
+<app-task-detail #taskDetailDrawer></app-task-detail>

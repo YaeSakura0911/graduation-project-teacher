@@ -1,17 +1,17 @@
 <div class="container" style="width: 50%; margin: 0 auto;">
     <h3 nz-typography>创建研究</h3>
     <nz-divider></nz-divider>
-    <form nz-form>
+    <form nz-form (ngSubmit)="createResearch()">
         <nz-form-item>
             <nz-form-label nzSpan="4">研究名称</nz-form-label>
             <nz-form-control  nzSpan="16">
-                <input nz-input />
+                <input type="text" name="researchName" [(ngModel)]="researchName" nz-input />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzSpan="4">研究内容</nz-form-label>
             <nz-form-control nzSpan="16">
-                <textarea nz-input></textarea>
+                <textarea name="researchDescription" [(ngModel)]="researchDescription" nz-input></textarea>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

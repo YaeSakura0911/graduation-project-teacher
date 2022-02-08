@@ -1,7 +1,7 @@
 <div class="container">
     <div nz-row class="menu" [nzGutter]="16" nzJustify="center">
         <div nz-col nzSpan="8">
-            <input nz-input placeholder="搜索你的研究" />
+            <input [(ngModel)]="researchName" (ngModelChange)="queryResearchList()" placeholder="搜索你的研究" nz-input />
         </div>
         <div nz-col nzSpan="2">
             <a nzType="primary" routerLink="/research/new" nz-button>创建研究</a>
@@ -9,68 +9,11 @@
     </div>
     <nz-list nzGrid>
         <div nz-row [nzGutter]="16">
-            <div nz-col [nzSpan]="6">
+            <div nz-col [nzSpan]="6" *ngFor="let research of researchList">
                 <nz-list-item>
-                    <a routerLink="/research/detail">
-                        <nz-card nzTitle="Artificial intelligence" nzHoverable>
-                            <p nz-typography [nzEllipsisRows]="2" nzEllipsis>Artificial intelligenceArtificial
-                                intelligenceArtificial intelligenceArtificial intelligenceArtificial
-                                intelligenceArtificial
-                                intelligenceArtificial intelligenceArtificial intelligenceArtificial
-                                intelligenceArtificial
-                                intelligenceArtificial intelligenceArtificial intelligence</p>
-                        </nz-card>
-                    </a>
-                </nz-list-item>
-            </div>
-            <div nz-col [nzSpan]="6">
-                <nz-list-item>
-                    <a routerLink="/research/detail">
-                        <nz-card nzTitle="Computer graphics and visualization" nzHoverable>
-                            <p [nzEllipsisRows]="2" nz-typography nzEllipsis>Computer graphics and visualizationComputer
-                                graphics and visualizationComputer graphics and visualizationComputer graphics and
-                                visualizationComputer graphics and visualizationComputer graphics and
-                                visualizationComputer
-                                graphics and visualizationComputer graphics and visualization</p>
-                        </nz-card>
-                    </a>
-                </nz-list-item>
-            </div>
-            <div nz-col [nzSpan]="6">
-                <nz-list-item>
-                    <a routerLink="/research/detail">
-                        <nz-card nzTitle="Concurrent, parallel and distributed systems" nzHoverable>
-                            <p [nzEllipsisRows]="2" nz-typography nzEllipsis>Concurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systems</p>
-                        </nz-card>
-                    </a>
-                </nz-list-item>
-            </div>
-            <div nz-col [nzSpan]="6">
-                <nz-list-item>
-                    <a routerLink="/research/detail">
-                        <nz-card nzTitle="Computer networks" nzHoverable>
-                            <p [nzEllipsisRows]="2" nz-typography nzEllipsis>Computer networksComputer networksComputer
-                                networksComputer networksComputer networksComputer networksComputer networksComputer
-                                networksComputer networksComputer networksComputer networksComputer networksComputer
-                                networksComputer networksComputer networksComputer networksComputer networksComputer
-                                networksComputer networks</p>
-                        </nz-card>
-                    </a>
-                </nz-list-item>
-            </div>
-            <div nz-col [nzSpan]="6">
-                <nz-list-item>
-                    <a routerLink="/research/detail">
-                        <nz-card nzTitle="Concurrent, parallel and distributed systems" nzHoverable>
-                            <p [nzEllipsisRows]="2" nz-typography nzEllipsis>Concurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systemsConcurrent, parallel and distributed systemsConcurrent, parallel and distributed
-                                systems</p>
+                    <a [routerLink]="['/research/detail', research.researchId]">
+                        <nz-card [nzTitle]="research.researchName" nzHoverable>
+                            <p nz-typography [nzEllipsisRows]="2" nzEllipsis>{{ research.researchDescription }}</p>
                         </nz-card>
                     </a>
                 </nz-list-item>

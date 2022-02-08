@@ -1,60 +1,16 @@
-<div class="container">
-    <div style="display: flex;">
-        <div style="margin-right: 32px;" (click)="onBack()">
-            <i nz-icon style="font-size: 32px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="32" fill="currentColor">
-                    <path
-                        d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z">
-                    </path>
-                </svg>
-            </i>
-        </div>
-        <div>
-            <h4 nz-typography>任务标题</h4>
-        </div>
-    </div>
-    <nz-divider></nz-divider>
-    <p nz-typography style="margin-bottom: 16px;">任务内容</p>
-    <nz-table #basicTable>
-        <thead>
-            <tr>
-                <th>序号</th>
-                <th>学生姓名</th>
-                <th>状态</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>姜凯文</td>
-                <td>
-                    <nz-badge nzStatus="warning" nzText="已提交"></nz-badge>
-                </td>
-                <td>
-                    <a>查看</a>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>姜凯文</td>
-                <td>
-                    <nz-badge nzStatus="error" nzText="未提交"></nz-badge>
-                </td>
-                <td>
-                    <a>查看</a>
-                </td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>姜凯文</td>
-                <td>
-                    <nz-badge nzStatus="success" nzText="已通过"></nz-badge>
-                </td>
-                <td>
-                    <a>查看</a>
-                </td>
-            </tr>
-        </tbody>
-    </nz-table>
-</div>
+<nz-drawer [nzClosable]="false" [nzVisible]="drawerVisible" [nzWidth]="560" nzPlacement="right" nzTitle="任务详情"
+           (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+        <nz-descriptions [nzColumn]="1">
+            <nz-descriptions-item nzTitle="任务名称">{{ taskName }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="研究方向">{{ researchName }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="任务状态">
+                <nz-badge *ngIf="taskState == 0" nzStatus="default" nzText="未发布"></nz-badge>
+                <nz-badge *ngIf="taskState == 1" nzStatus="processing" nzText="进行中"></nz-badge>
+                <nz-badge *ngIf="taskState == 2" nzStatus="success" nzText="已完成"></nz-badge>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="截止时间">{{ endTime }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="任务内容">{{ taskContent }}</nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+</nz-drawer>

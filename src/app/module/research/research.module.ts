@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 // Research模块的组件
 import { ResearchAddComponent } from 'src/app/component/research/research-add/research-add.component';
@@ -21,9 +22,12 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 // 导航
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 // 数据录入
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 // 数据展示
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
@@ -35,6 +39,9 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzTimelineModule } from 'ng-zorro-antd/timeline';
 // 反馈
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 
 @NgModule({
     declarations: [
@@ -44,6 +51,7 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
     ],
     imports: [
         CommonModule,
+        FormsModule,
         ResearchRoutingModule,
         TaskModule,
         StudentModule,
@@ -52,8 +60,11 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
         NzDividerModule,
         NzGridModule,
         NzMenuModule,
+        NzPaginationModule,
+        NzDatePickerModule,
         NzFormModule,
         NzInputModule,
+        NzSelectModule,
         NzAvatarModule,
         NzBadgeModule,
         NzCardModule,
@@ -62,7 +73,10 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
         NzTableModule,
         NzTabsModule,
         NzTimelineModule,
-        NzDrawerModule
+        NzDrawerModule,
+        NzMessageModule,
+        NzModalModule,
+        NzPopconfirmModule
     ]
 })
 

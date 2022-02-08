@@ -1,28 +1,25 @@
 <div class="container">
     <div nz-row class="menu" [nzGutter]="16" nzJustify="center">
         <div nz-col nzSpan="4">
-            <input nz-input placeholder="搜索你的学生" />
+            <input nz-input placeholder="搜索你的学生" [(ngModel)]="studentName" (ngModelChange)="queryStudentList()" />
         </div>
         <div nz-col nzSpan="4">
-            <nz-select nzPlaceHolder="研究方向" nzAllowClear>
-                <nz-option nzValue="1" nzLabel="Artificial intelligence"></nz-option>
-                <nz-option nzValue="2" nzLabel="Computer graphics and visualization"></nz-option>
+            <nz-select nzPlaceHolder="研究方向" [(ngModel)]="researchId" (ngModelChange)="queryStudentList()" nzAllowClear>
+                <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
+                    [nzLabel]="research.researchName"></nz-option>
             </nz-select>
         </div>
         <div nz-col nzSpan="4">
-            <nz-select nzPlaceHolder="入学年份" nzAllowClear>
-                <nz-option nzValue="1" nzLabel="2018"></nz-option>
-                <nz-option nzValue="2" nzLabel="2019"></nz-option>
-            </nz-select>
+            <nz-date-picker nzMode="year" nzPlaceHolder="入学年份" [nzDisabledDate]="disabledDate" [(ngModel)]="studentYear"
+                (ngModelChange)="queryStudentList()"></nz-date-picker>
         </div>
         <div nz-col nzSpan="2">
-            <button nzType="primary" (click)="openStudentDrawer()" nz-button>添加学生</button>
+            <button nzType="primary" (click)="openFormDrawer(0)" nz-button>添加学生</button>
         </div>
     </div>
-    <nz-table #basicTable>
+    <nz-table #basicTable [nzData]="studentList" [nzFrontPagination]="false">
         <thead>
             <tr>
-                <th>序号</th>
                 <th>姓名</th>
                 <th>研究方向</th>
                 <th>入学年份</th>
@@ -30,21 +27,29 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>姜凯文</td>
-                <td></td>
-                <td>2018</td>
+            <tr *ngFor="let student of basicTable.data">
+                <td>{{ student.studentName }}</td>
+                <td>{{ student.researchName }}</td>
+                <td>{{ student.studentYear | date: "yyyy" }}</td>
                 <td>
-                    <a>查看</a>
+                    <a (click)="openDetailDrawer(student.studentId)">查看</a>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <a (click)="openStudentDrawer()">编辑</a>
+                    <a (click)="openFormDrawer(student.studentId)">编辑</a>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <a>删除</a>
+                    <a nz-popconfirm nzPopconfirmTitle="确认删除当前学生?" nzPopconfirmPlacement="bottom"
+                        (nzOnConfirm)="deleteStudent(student.studentId)">
+                        删除
+                    </a>
                 </td>
             </tr>
         </tbody>
     </nz-table>
+
+    <br>
+
+    <nz-pagination [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize" [nzTotal]="total" [nzShowSizeChanger]="true"
+        (nzPageIndexChange)="pageIndexChange()" (nzPageSizeChange)="pageSizeChange()"></nz-pagination>
 </div>
 
 <app-student-form #studentFormDrawer></app-student-form>
+<app-student-detail #studentDetailDrawer></app-student-detail>
