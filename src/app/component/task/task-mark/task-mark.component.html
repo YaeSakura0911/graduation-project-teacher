@@ -11,9 +11,10 @@
         <nz-descriptions [nzColumn]="1">
             <nz-descriptions-item nzTitle="学生姓名">{{ studentName }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="完成状态">
-                <nz-badge *ngIf="completeState == 1" nzStatus="error" nzText="未提交"></nz-badge>
+                <nz-badge *ngIf="completeState == 1" nzStatus="processing" nzText="进行中"></nz-badge>
                 <nz-badge *ngIf="completeState == 2" nzStatus="warning" nzText="已提交"></nz-badge>
-                <nz-badge *ngIf="completeState == 3" nzStatus="success" nzText="已通过"></nz-badge>
+                <nz-badge *ngIf="completeState == 3" nzStatus="error" nzText="已驳回"></nz-badge>
+                <nz-badge *ngIf="completeState == 4" nzStatus="success" nzText="已通过"></nz-badge>
             </nz-descriptions-item>
             <nz-descriptions-item nzTitle="提交时间"></nz-descriptions-item>
         </nz-descriptions>
@@ -24,7 +25,8 @@
     <ng-template #footerTpl>
         <div style="float: right">
             <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
-            <button nz-button nzType="primary" (click)="closeDrawer()">批改</button>
+            <button nz-button style="margin-right: 8px;" nzType="primary" (click)="updateComplete(3)" nzDanger>驳回</button>
+            <button nz-button nzType="primary" (click)="updateComplete(4)">通过</button>
         </div>
     </ng-template>
 </nz-drawer>

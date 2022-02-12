@@ -29,12 +29,13 @@
         <tr *ngFor="let complete of completeTable.data">
             <td>{{ complete.studentName }}</td>
             <td>
-                <nz-badge *ngIf="complete.completeState == 1" nzStatus="error" nzText="未提交"></nz-badge>
+                <nz-badge *ngIf="complete.completeState == 1" nzStatus="processing" nzText="进行中"></nz-badge>
                 <nz-badge *ngIf="complete.completeState == 2" nzStatus="warning" nzText="已提交"></nz-badge>
-                <nz-badge *ngIf="complete.completeState == 3" nzStatus="success" nzText="已通过"></nz-badge>
+                <nz-badge *ngIf="complete.completeState == 3" nzStatus="error" nzText="已驳回"></nz-badge>
+                <nz-badge *ngIf="complete.completeState == 4" nzStatus="success" nzText="已通过"></nz-badge>
             </td>
             <td>
-                <a (click)="openTaskMarkDrawer(complete.completeId)">查看</a>
+                <a (click)="openTaskMarkDrawer(complete.completeId)" [nzDisabled]="complete.completeState != 2" nz-typography>查看</a>
             </td>
         </tr>
         </tbody>
@@ -47,4 +48,4 @@
                    (nzPageIndexChange)="pageIndexChange()" (nzPageSizeChange)="pageSizeChange()"></nz-pagination>
 </div>
 
-<app-task-mark #taskMarkDrawer></app-task-mark>
+<app-task-mark (refreshPage)="queryCompleteList()" #taskMarkDrawer></app-task-mark>

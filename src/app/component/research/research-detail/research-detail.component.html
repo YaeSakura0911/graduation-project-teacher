@@ -3,11 +3,11 @@
         <!-- 概述选项卡 -->
         <nz-tab nzTitle="概述">
             <div nz-row [nzGutter]="16" class="tab-container" style="display: flex;">
-                <div nz-col nzSpan="6">
+                <div nz-col [nzSpan]="6">
                     <h4 nz-typography>{{ researchName }}</h4>
                     <p nzType="secondary" nz-typography>{{ researchDescription }}</p>
                 </div>
-                <div nz-col nzSpan="9">
+                <div nz-col [nzSpan]="9">
                     <h4 nz-typography>动态</h4>
                     <nz-divider></nz-divider>
                     <div style="margin-bottom: 32px;">
@@ -19,11 +19,13 @@
                         </nz-comment>
                     </div>
                 </div>
-                <div nz-col nzSpan="9">
+                <div nz-col [nzSpan]="9">
                     <h4 nz-typography>任务</h4>
                     <nz-divider></nz-divider>
                     <nz-timeline nzMode="alternate">
-                        <nz-timeline-item nzColor="green">Create a services site 2015-09-01</nz-timeline-item>
+                        <div *ngFor="let task of taskList">
+                            <nz-timeline-item nzColor="green">{{taskName}} 2015-09-01</nz-timeline-item>
+                        </div>
                         <nz-timeline-item nzColor="green">Solve initial network problems 2015-09-01</nz-timeline-item>
                         <nz-timeline-item nzColor="green">
                             <p>Solve initial network problems 2015-09-01</p>
@@ -51,9 +53,9 @@
                     </div>
                     <div nz-col [nzSpan]="4">
                         <nz-select [(ngModel)]="taskState" nzPlaceHolder="按任务状态筛选" nzAllowClear>
-                            <nz-option [nzValue]="0" nzLabel="未发布"></nz-option>
-                            <nz-option [nzValue]="1" nzLabel="进行中"></nz-option>
-                            <nz-option [nzValue]="2" nzLabel="已完成"></nz-option>
+                            <nz-option [nzValue]="1" nzLabel="未发布"></nz-option>
+                            <nz-option [nzValue]="2" nzLabel="进行中"></nz-option>
+                            <nz-option [nzValue]="3" nzLabel="已完成"></nz-option>
                         </nz-select>
                     </div>
                     <div nz-col [nzSpan]="2">
@@ -72,7 +74,7 @@
                     <tbody>
                         <tr *ngFor="let task of taskTable.data">
                             <td>{{ task.taskName }}</td>
-                            <td>{{ task.endTime | date: "yyyy-MM-dd" }}</td>
+                            <td>{{ task.endTime | date: "yyyy-MM-dd HH:mm:ss" }}</td>
                             <td>
                                 <nz-badge nzStatus="processing" nzText="进行中"></nz-badge>
                             </td>

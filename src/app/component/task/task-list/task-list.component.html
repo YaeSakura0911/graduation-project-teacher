@@ -1,23 +1,23 @@
 <div class="container">
     <!-- 菜单 -->
     <div nz-row class="menu" [nzGutter]="16" nzJustify="center">
-        <div nz-col [nzSpan]="4">
+        <div nz-col nzSpan="4">
             <input [(ngModel)]="taskName" (ngModelChange)="queryTaskList()" placeholder="搜索你的任务" nz-input/>
         </div>
-        <div nz-col [nzSpan]="4">
+        <div nz-col nzSpan="4">
             <nz-select [(ngModel)]="researchId" (ngModelChange)="queryTaskList()" nzPlaceHolder="按研究方向筛选" nzAllowClear>
                 <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
                            [nzLabel]="research.researchName"></nz-option>
             </nz-select>
         </div>
-        <div nz-col [nzSpan]="4">
+        <div nz-col nzSpan="4">
             <nz-select [(ngModel)]="taskState" (ngModelChange)="queryTaskList()" nzPlaceHolder="按任务状态筛选" nzAllowClear>
                 <nz-option [nzValue]="1" nzLabel="未发布"></nz-option>
                 <nz-option [nzValue]="2" nzLabel="进行中"></nz-option>
                 <nz-option [nzValue]="3" nzLabel="已完成"></nz-option>
             </nz-select>
         </div>
-        <div nz-col [nzSpan]="2">
+        <div nz-col nzSpan="2">
             <button nzType="primary" (click)="openTaskFormDrawer(0, 0)" nz-button>创建任务</button>
         </div>
     </div>

@@ -33,7 +33,7 @@ export class ResearchDetailComponent implements OnInit {
     studentName: string = "";
     studentYear!: Date;
     taskName: string = "";
-    taskState: number = -1;
+    taskState: number = 0;
 
     pageIndex: number = 1;
     pageSize: number = 10;
@@ -75,11 +75,15 @@ export class ResearchDetailComponent implements OnInit {
         this.pageIndex = 1;
         this.pageSize = 10;
         this.total = 0;
-        if (index == 1) {
-            // 任务
+        if (index == 0) {
+            // 概述页
+            this.queryResearchTask();
+        }
+        else if (index == 1) {
+            // 任务页
             this.queryResearchTask();
         } else if (index == 2) {
-            // 学生
+            // 学生页
             this.queryResearchStudent();
         }
     }
@@ -144,7 +148,7 @@ export class ResearchDetailComponent implements OnInit {
     // 查询研究详情
     queryResearchDetail(researchId: number): void {
         // 发送请求
-        this.researchService.queryResearchDetail(researchId).subscribe(response => {
+        this.researchService.queryResearch(researchId).subscribe(response => {
             this.researchName = response.body.researchName;
             this.researchDescription = response.body.researchDescription;
         })
@@ -152,7 +156,7 @@ export class ResearchDetailComponent implements OnInit {
 
     // 查询任务列表
     queryResearchTask(): void {
-        let queryTaskListForm: QueryTaskListForm = new QueryTaskListForm(
+        let form: QueryTaskListForm = new QueryTaskListForm(
             this.teacherId,
             this.researchId,
             this.taskName,
@@ -160,7 +164,15 @@ export class ResearchDetailComponent implements OnInit {
             this.pageIndex,
             this.pageSize
         )
+        console.log("QueryTaskListForm", form);
         // 发送请求
+        this.taskService.queryTaskList(form).subscribe(response => {
+            console.log("queryResearchTask()", response);
+            if (response.code == 200) {
+                this.taskList = response.body.taskList;
+                this.total = response.body.total;
+            }
+        })
     }
 
     // 查询学生列表
@@ -176,11 +188,9 @@ export class ResearchDetailComponent implements OnInit {
         );
 
         this.studentService.queryStudentList(queryStudentListForm).subscribe(response => {
-            console.log(response);
+            console.log("queryResearchStudent()", response);
             if (response.code == 200) {
                 this.studentList = response.body.studentList;
-                this.pageIndex = response.body.pageIndex;
-                this.pageSize = response.body.pageSize;
                 this.total = response.body.total;
             }
         })

@@ -1,6 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {CompleteService} from "../../../service/complete.service";
+import {UpdateCompleteForm} from "../../../form/update-complete-form";
+import {NzMessageService} from "ng-zorro-antd/message";
+import {TaskService} from "../../../service/task.service";
 
 @Component({
     selector: 'app-task-mark',
@@ -17,15 +19,19 @@ export class TaskMarkComponent {
 
     drawerVisible: boolean = false;
 
+    @Output()
+    refreshPage = new EventEmitter<any>();
+
     constructor(
         private route: ActivatedRoute,
-        private completeService: CompleteService
+        private taskService: TaskService,
+        private messageService: NzMessageService
     ) {
     }
 
     // 查询完成详情
     queryComplete(): void {
-        this.completeService.queryComplete(this.completeId).subscribe(response => {
+        this.taskService.queryComplete(this.completeId).subscribe(response => {
             console.log("queryComplete()", response);
             if (response.code == 200) {
                 this.studentName = response.body.studentName;
@@ -36,8 +42,22 @@ export class TaskMarkComponent {
         })
     }
 
-    updateComplete(): void {
-
+    // 更新完成详情
+    updateComplete(completeState: number): void {
+        // 更新完成详情表单
+        let form: UpdateCompleteForm = new UpdateCompleteForm(
+            this.completeId,
+            completeState
+        );
+        this.closeDrawer();
+        // 发起请求
+        this.taskService.updateComplete(form).subscribe(response => {
+            console.log("updateComplete()", response);
+            if (response.code == 200 && response.body == true) {
+                this.messageService.success("批改成功!")
+            }
+            this.refreshPage.emit();
+        });
     }
 
     openDrawer(completeId: number): void {
@@ -49,5 +69,4 @@ export class TaskMarkComponent {
     closeDrawer(): void {
         this.drawerVisible = false;
     }
-
 }

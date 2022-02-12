@@ -1,45 +1,54 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RegisterStudentForm } from '../form/register-student-form';
-import { UpdateStudentForm } from '../form/update-student-form';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+import {QueryStudentListForm} from "../form/query-student-list-form";
+import {RegisterStudentForm} from '../form/register-student-form';
+import {UpdateStudentForm} from '../form/update-student-form';
+
+@Injectable({providedIn: 'root'})
 export class StudentService {
 
-    API_URL: string = "http://127.0.0.1:8080";
-
-    constructor(private http: HttpClient) { }
-
-    // 学生注册
-    registerStudent(registerStudentForm: RegisterStudentForm): Observable<any> {
-        return this.http.post<any>(this.API_URL + "/student/register", registerStudentForm);
+    constructor(private http: HttpClient) {
     }
 
-    // 学生删除
+    /**
+     * 删除学生
+     * @param studentId
+     */
     deleteStudent(studentId: number): Observable<any> {
-        return this.http.delete<any>(this.API_URL + "/student?studentId=" + studentId);
+        return this.http.delete("/student?studentId=" + studentId);
     }
 
-    // 修改学生信息
-    updateStudent(updateStudentForm: UpdateStudentForm): Observable<any> {
-        return this.http.put<any>(this.API_URL + "/student", updateStudentForm);
-    }
-
-    // 学生登录
-    loginStudent() {
-
-    }
-
-    // 查询学生列表
-    queryStudentList(queryStudentListForm: object): Observable<any> {
-        return this.http.post<any>(this.API_URL + "/student/list", queryStudentListForm);
-    }
-
-    // 查询学生详情
+    /**
+     * 查询学生
+     * @param studentId
+     */
     queryStudent(studentId: number): Observable<any> {
-        return this.http.get<any>(this.API_URL + "/student?studentId=" + studentId);
+        return this.http.get("/student?studentId=" + studentId);
+    }
+
+    /**
+     * 查询学生列表
+     * @param form
+     */
+    queryStudentList(form: QueryStudentListForm): Observable<any> {
+        return this.http.post("/student/list", form);
+    }
+
+    /**
+     * 注册学生
+     * @param form
+     */
+    registerStudent(form: RegisterStudentForm): Observable<any> {
+        return this.http.post("/student/register", form);
+    }
+
+    /**
+     * 更新学生
+     * @param form
+     */
+    updateStudent(form: UpdateStudentForm): Observable<any> {
+        return this.http.put("/student", form);
     }
 }

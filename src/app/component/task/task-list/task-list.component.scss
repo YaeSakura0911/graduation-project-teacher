@@ -1,13 +1,21 @@
-.menu {
-    margin-bottom: 16px;
+.container {
+    width: 100%;
 
-    nz-select {
+    .menu {
         width: 100%;
+        margin-bottom: 16px;
+
+        nz-select {
+            width: 100%;
+        }
+    }
+
+    nz-table {
+        th, td {
+            text-align: center;
+        }
     }
 }
 
-nz-table {
-    th, td {
-        text-align: center;
-    }
-}
+
+

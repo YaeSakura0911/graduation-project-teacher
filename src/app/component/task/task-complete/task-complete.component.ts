@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {QueryCompleteListForm} from "../../../form/query-complete-list-form";
-import {CompleteService} from "../../../service/complete.service";
 import {CompleteEntity} from "../../../entity/complete.entity";
 import {TaskMarkComponent} from "../task-mark/task-mark.component";
+import {TaskService} from "../../../service/task.service";
 
 @Component({
     selector: 'app-task-complete',
@@ -13,6 +13,8 @@ import {TaskMarkComponent} from "../task-mark/task-mark.component";
 export class TaskCompleteComponent implements OnInit {
 
     taskId: number = 0;
+    completeId: number = 0;
+    drawerVisible: boolean = false;
 
     pageIndex: number = 1;
     pageSize: number = 10;
@@ -25,7 +27,7 @@ export class TaskCompleteComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private completeService: CompleteService) {
+        private taskService: TaskService) {
     }
 
     ngOnInit(): void {
@@ -50,6 +52,7 @@ export class TaskCompleteComponent implements OnInit {
 
     // 查询完成情况列表
     queryCompleteList(): void {
+        this.drawerVisible = false;
         // 查询完成情况表单
         let form = new QueryCompleteListForm(
             this.taskId,
@@ -57,7 +60,7 @@ export class TaskCompleteComponent implements OnInit {
             this.pageSize
         );
         console.log(form);
-        this.completeService.queryCompleteList(form).subscribe(response => {
+        this.taskService.queryCompleteList(form).subscribe(response => {
             console.log("queryCompleteList()", response);
             if (response.code == 200) {
                 this.completeList = response.body.completeList;
@@ -69,5 +72,4 @@ export class TaskCompleteComponent implements OnInit {
     openTaskMarkDrawer(completeId: number): void {
         this.taskMarkDrawer.openDrawer(completeId);
     }
-
 }
