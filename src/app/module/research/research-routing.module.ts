@@ -8,7 +8,7 @@ import { ResearchAddComponent } from 'src/app/component/research/research-add/re
 const routes: Routes = [
     { path: '', component: ResearchListComponent },
     {
-        path: 'detail/:researchId',
+        path: 'detail',
         data: { breadcrumb: '研究详情' },
         component: ResearchDetailComponent
     },

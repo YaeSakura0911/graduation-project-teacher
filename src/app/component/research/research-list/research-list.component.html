@@ -12,7 +12,7 @@
         <div nz-row [nzGutter]="16">
             <div nz-col [nzSpan]="6" *ngFor="let research of researchList">
                 <nz-list-item>
-                    <a [routerLink]="['/research/detail', research.researchId]">
+                    <a routerLink="/research/detail" [queryParams]="{researchId: research.researchId}">
                         <nz-card [nzTitle]="research.researchName" nzHoverable>
                             <p nz-typography [nzEllipsisRows]="2" nzEllipsis>{{ research.researchDescription }}</p>
                         </nz-card>

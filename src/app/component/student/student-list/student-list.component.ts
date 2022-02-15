@@ -25,7 +25,7 @@ export class StudentListComponent implements OnInit {
     teacherId: number = 0;
     researchId: number = 0;
     studentName: string = "";
-    studentYear!: Date;
+    studentYear: Date | null = null;
     studentList: Student[] = [];
     researchList: Research[] = [];
 
@@ -57,23 +57,20 @@ export class StudentListComponent implements OnInit {
     // 查询学生列表
     queryStudentList(): void {
         // 查询学生列表表单
-        let queryStudentListForm: QueryStudentListForm = new QueryStudentListForm(
+        let form: QueryStudentListForm = new QueryStudentListForm(
             this.teacherId,
             this.studentName,
             this.researchId,
-            getYear(this.studentYear),
+            this.studentYear,
             this.pageIndex,
-            this.pageSize,
-            this.total
+            this.pageSize
         )
-        console.log(queryStudentListForm);
+        console.log("QueryStudentListForm", form);
         // 发起请求
-        this.studentService.queryStudentList(queryStudentListForm).subscribe(response => {
+        this.studentService.queryStudentList(form).subscribe(response => {
             console.log(response);
             if(response.code == 200) {
                 this.studentList = response.body.studentList;
-                this.pageIndex = response.body.pageIndex;
-                this.pageSize = response.body.pageSize;
                 this.total = response.body.total;
             }
         })

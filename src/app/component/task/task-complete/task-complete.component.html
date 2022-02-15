@@ -35,7 +35,7 @@
                 <nz-badge *ngIf="complete.completeState == 4" nzStatus="success" nzText="已通过"></nz-badge>
             </td>
             <td>
-                <a (click)="openTaskMarkDrawer(complete.completeId)" [nzDisabled]="complete.completeState != 2" nz-typography>查看</a>
+                <a (click)="openTaskMarkDrawer(complete.completeId)" [nzDisabled]="complete.completeState == 3 || complete.completeId == 4" nz-typography>查看</a>
             </td>
         </tr>
         </tbody>

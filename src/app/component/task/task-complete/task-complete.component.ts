@@ -27,14 +27,14 @@ export class TaskCompleteComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private taskService: TaskService) {
-    }
-
-    ngOnInit(): void {
+        private taskService: TaskService
+    ) {
         this.route.queryParams.subscribe((res) => {
             this.taskId = Number(res['taskId']);
         })
-        // this.taskId = Number(this.route.snapshot.params['taskId']);
+    }
+
+    ngOnInit(): void {
         this.queryCompleteList();
     }
 
@@ -42,10 +42,12 @@ export class TaskCompleteComponent implements OnInit {
         history.go(-1)
     }
 
+    // 分页页码改变
     pageIndexChange(): void {
         this.queryCompleteList();
     }
 
+    // 分页大小改变
     pageSizeChange(): void {
         this.queryCompleteList();
     }
@@ -56,10 +58,12 @@ export class TaskCompleteComponent implements OnInit {
         // 查询完成情况表单
         let form = new QueryCompleteListForm(
             this.taskId,
+            0,
             this.pageIndex,
             this.pageSize
         );
-        console.log(form);
+        console.log("QueryCompleteListForm", form);
+        // 发起请求
         this.taskService.queryCompleteList(form).subscribe(response => {
             console.log("queryCompleteList()", response);
             if (response.code == 200) {

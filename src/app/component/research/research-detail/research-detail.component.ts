@@ -16,8 +16,11 @@ import {QueryStudentListForm} from 'src/app/form/query-student-list-form';
 import {Student} from 'src/app/entity/student.entity';
 import {TaskEntity} from 'src/app/entity/task.entity';
 
-import {differenceInCalendarDays, formatDistance, getYear} from 'date-fns';
+import {differenceInCalendarDays, formatDistanceToNow, parseISO} from 'date-fns';
 import {StudentDetailComponent} from '../../student/student-detail/student-detail.component';
+import {TaskDetailComponent} from "../../task/task-detail/task-detail.component";
+import {QueryCompleteListForm} from "../../../form/query-complete-list-form";
+import {CompleteEntity} from "../../../entity/complete.entity";
 
 @Component({
     selector: 'app-research-detail',
@@ -31,27 +34,33 @@ export class ResearchDetailComponent implements OnInit {
     researchName: string = "";
     researchDescription: string = "";
     studentName: string = "";
-    studentYear!: Date;
+    studentYear: Date | null = null;
     taskName: string = "";
     taskState: number = 0;
 
-    pageIndex: number = 1;
-    pageSize: number = 10;
-    total!: number;
+    taskPageIndex: number = 1;
+    taskPageSize: number = 10;
+    taskTotal!: number;
+    studentPageIndex: number = 1;
+    studentPageSize: number = 10;
+    studentTotal!: number;
 
     today: Date = new Date();
     disabledDate = (current: Date): boolean => differenceInCalendarDays(current, this.today) > 0;
     deleteResearchModelVisible: boolean = false;
-    time: string = formatDistance(new Date(), new Date);
+    // time: string = formatDistance(new Date(), new Date);
     studentList: Student[] = [];
     taskList: TaskEntity[] = [];
+    completeList: CompleteEntity[] = [];
 
     @ViewChild('taskDrawer')
-    taskDrawer: TaskFormComponent | undefined;
+    taskDrawer!: TaskFormComponent;
+    @ViewChild('taskDetailDrawer')
+    taskDetailDrawer!: TaskDetailComponent;
     @ViewChild('studentDetailDrawer')
     studentDetailDrawer!: StudentDetailComponent;
     @ViewChild('studentFormDrawer')
-    studentFormDrawer: StudentFormComponent | undefined;
+    studentFormDrawer!: StudentFormComponent;
 
     constructor(
         private route: ActivatedRoute,
@@ -60,55 +69,22 @@ export class ResearchDetailComponent implements OnInit {
         private taskService: TaskService,
         private messageService: NzMessageService
     ) {
+        this.route.queryParams.subscribe((res) => {
+            this.researchId = Number(res['researchId']);
+        })
+    }
+
+    dateDistance(updateTime: string) {
+        return formatDistanceToNow(parseISO(updateTime));
     }
 
     // 初始化页面
     ngOnInit(): void {
         this.teacherId = Number(localStorage.getItem('teacherId'));
-        this.researchId = Number(this.route.snapshot.params['researchId']);
         this.queryResearchDetail(this.researchId);
-    }
-
-    // 标签页发生改变
-    tabChange(index: number): void {
-        // 重置分页
-        this.pageIndex = 1;
-        this.pageSize = 10;
-        this.total = 0;
-        if (index == 0) {
-            // 概述页
-            this.queryResearchTask();
-        }
-        else if (index == 1) {
-            // 任务页
-            this.queryResearchTask();
-        } else if (index == 2) {
-            // 学生页
-            this.queryResearchStudent();
-        }
-    }
-
-    // 分页索引发生改变
-    pageIndexChange(tabIndex: number): void {
-        if (tabIndex == 0) {
-            // 任务分页
-            this.queryResearchTask();
-        } else if (tabIndex == 1) {
-            // 学生分页
-            this.queryResearchStudent();
-        }
-    }
-
-    // 分页大小发生改变
-    pageSizeChange(tabIndex: number): void {
-        // 任务分页
-        if (tabIndex == 0) {
-            this.queryResearchTask();
-        }
-        // 学生分页
-        else if (tabIndex == 1) {
-            this.queryResearchStudent();
-        }
+        this.queryResearchTask();
+        this.queryResearchStudent();
+        this.queryCompleteList();
     }
 
     // 删除研究
@@ -145,6 +121,22 @@ export class ResearchDetailComponent implements OnInit {
         })
     }
 
+    queryCompleteList(): void {
+        let form = new QueryCompleteListForm(
+            0,
+            this.researchId,
+            1,
+            10
+        );
+        console.log("QueryCompleteListForm", form);
+        this.taskService.queryCompleteList(form).subscribe(response => {
+            console.log("queryCompleteList", response);
+            if (response.code == 200) {
+                this.completeList = response.body.completeList;
+            }
+        })
+    }
+
     // 查询研究详情
     queryResearchDetail(researchId: number): void {
         // 发送请求
@@ -161,8 +153,8 @@ export class ResearchDetailComponent implements OnInit {
             this.researchId,
             this.taskName,
             this.taskState,
-            this.pageIndex,
-            this.pageSize
+            this.taskPageIndex,
+            this.taskPageSize
         )
         console.log("QueryTaskListForm", form);
         // 发送请求
@@ -170,30 +162,47 @@ export class ResearchDetailComponent implements OnInit {
             console.log("queryResearchTask()", response);
             if (response.code == 200) {
                 this.taskList = response.body.taskList;
-                this.total = response.body.total;
+                this.taskTotal = response.body.total;
             }
         })
     }
 
     // 查询学生列表
     queryResearchStudent(): void {
-        let queryStudentListForm: QueryStudentListForm = new QueryStudentListForm(
+        let form: QueryStudentListForm = new QueryStudentListForm(
             this.teacherId,
             this.studentName,
             this.researchId,
-            getYear(this.studentYear),
-            this.pageIndex,
-            this.pageSize,
-            this.total
+            this.studentYear,
+            this.studentPageIndex,
+            this.studentPageSize
         );
-
-        this.studentService.queryStudentList(queryStudentListForm).subscribe(response => {
+        console.log("QueryStudentListForm", form);
+        this.studentService.queryStudentList(form).subscribe(response => {
             console.log("queryResearchStudent()", response);
             if (response.code == 200) {
                 this.studentList = response.body.studentList;
-                this.total = response.body.total;
+                this.studentTotal = response.body.total;
             }
         })
+    }
+
+    studentPageIndexChange(): void {
+        this.queryResearchStudent();
+    }
+
+    studentPageSizeChange(): void {
+        this.queryResearchStudent();
+    }
+
+    // 分页页码发生改变
+    taskPageIndexChange(): void {
+        this.queryResearchTask();
+    }
+
+    // 分页大小发生改变
+    taskPageSizeChange(): void {
+        this.queryResearchTask();
     }
 
     // 更新研究信息
@@ -222,6 +231,10 @@ export class ResearchDetailComponent implements OnInit {
 
     openTaskDrawer(taskId: number, researchId: number): void {
         this.taskDrawer?.openDrawer(taskId, researchId);
+    }
+
+    openTaskDetailDrawer(taskId: number): void {
+        this.taskDetailDrawer.openDrawer(taskId);
     }
 
     openStudentDetailDrawer(studentId: number): void {

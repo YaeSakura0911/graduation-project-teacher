@@ -68,7 +68,8 @@ import {NzPopconfirmModule} from 'ng-zorro-antd/popconfirm';
         NzPopconfirmModule
     ],
     exports: [
-        TaskFormComponent
+        TaskFormComponent,
+        TaskDetailComponent
     ]
 })
 export class TaskModule {

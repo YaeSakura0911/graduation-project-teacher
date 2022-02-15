@@ -4,9 +4,8 @@ export class QueryStudentListForm {
         public teacherId: number,
         public studentName: string,
         public researchId: number,
-        public studentYear: Date | number,
+        public studentYear: Date | null,
         public pageIndex: number,
-        public pageSize: number,
-        public total: number
+        public pageSize: number
     ) { }
 }

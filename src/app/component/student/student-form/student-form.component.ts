@@ -25,7 +25,7 @@ export class StudentFormComponent implements OnInit {
     researchId: number = 0;
     studentId: number = 0;
     studentName: string = "";
-    studentYear: Date | number = 0;
+    studentYear: Date | null = null;
     studentGender: number = 0;
     researchList: Research[] = [];
     today: Date = new Date();
@@ -61,7 +61,7 @@ export class StudentFormComponent implements OnInit {
         // 注册学生表单
         let registerStudentForm: RegisterStudentForm = new RegisterStudentForm(
             this.studentName,
-            getYear(this.studentYear),
+            this.studentYear,
             this.studentGender,
             this.researchId
         )
@@ -134,7 +134,7 @@ export class StudentFormComponent implements OnInit {
         // 清空数据
         this.researchId = 0;
         this.studentName = "";
-        this.studentYear = 0;
+        this.studentYear = null;
         this.studentGender = 0;
     }
 
