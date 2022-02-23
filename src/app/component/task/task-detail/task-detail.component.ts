@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TaskService} from "../../../service/task.service";
 import {ActivatedRoute} from "@angular/router";
+import {StorageUtil} from "../../../util/storage.util";
 
 @Component({
     selector: 'app-task-detail',
@@ -13,7 +14,7 @@ export class TaskDetailComponent implements OnInit {
     taskId: number = 0;
     taskName: string = "";
     researchName: string = "";
-    taskState: number = -1;
+    taskState: number = 0;
     endTime!: Date;
     taskContent: string = "";
 
@@ -21,12 +22,12 @@ export class TaskDetailComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private taskService: TaskService) {
+        private taskService: TaskService,
+        private storageUtil: StorageUtil) {
     }
 
     ngOnInit(): void {
-        this.teacherId = Number(localStorage.getItem('teacherId'));
-        // this.taskId = Number(this.route.snapshot.params['taskId']);
+        this.teacherId = this.storageUtil.get("auth").teacherId;
     }
 
     // 查询任务详情

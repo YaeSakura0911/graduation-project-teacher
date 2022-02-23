@@ -2,12 +2,12 @@
     <nz-tabset nzCentered>
         <!-- 概述选项卡 -->
         <nz-tab nzTitle="概述">
-            <div nz-row [nzGutter]="16" class="tab-container" style="display: flex;">
-                <div nz-col [nzSpan]="6">
-                    <h4 nz-typography>{{ researchName }}</h4>
-                    <p nzType="secondary" nz-typography>{{ researchDescription }}</p>
+            <div [nzGutter]="16" class="tab-container" style="display: flex;" nz-row>
+                <div [nzSpan]="6" nz-col>
+                    <h4 nz-typography>{{ updateResearchFrom.value.researchName }}</h4>
+                    <p nzType="secondary" nz-typography>{{ updateResearchFrom.value.researchDescription }}</p>
                 </div>
-                <div nz-col [nzSpan]="9">
+                <div [nzSpan]="9" nz-col>
                     <h4 nz-typography>动态</h4>
                     <nz-divider></nz-divider>
                     <nz-list [nzDataSource]="completeList" [nzRenderItem]="complete" nzItemLayout="horizontal">
@@ -38,16 +38,17 @@
             <div class="tab-container">
                 <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
                     <div nz-col [nzSpan]="4">
-                        <input nz-input placeholder="搜索你的任务"/>
+                        <input placeholder="搜索你的任务" [(ngModel)]="taskName" (ngModelChange)="queryTaskList()" nz-input/>
                     </div>
                     <div nz-col [nzSpan]="4">
-                        <nz-select [(ngModel)]="taskState" nzPlaceHolder="按任务状态筛选" nzAllowClear>
+                        <nz-select [(ngModel)]="taskState" (ngModelChange)="queryTaskList()" nzPlaceHolder="按任务状态筛选"
+                                   nzAllowClear>
                             <nz-option [nzValue]="1" nzLabel="未发布"></nz-option>
                             <nz-option [nzValue]="2" nzLabel="进行中"></nz-option>
                             <nz-option [nzValue]="3" nzLabel="已完成"></nz-option>
                         </nz-select>
                     </div>
-                    <div nz-col [nzSpan]="2">
+                    <div nz-col [nzSpan]="2" [nzOffset]="14">
                         <button nzType="primary" (click)="openTaskDrawer(0, researchId)" nz-button>创建任务</button>
                     </div>
                 </div>
@@ -65,18 +66,24 @@
                         <td>{{ task.taskName }}</td>
                         <td>{{ task.endTime | date: "yyyy-MM-dd HH:mm:ss" }}</td>
                         <td>
-                            <nz-badge nzStatus="processing" nzText="进行中"></nz-badge>
+                            <nz-badge *ngIf="task.taskState == 1" nzStatus="default" nzText="未发布"></nz-badge>
+                            <nz-badge *ngIf="task.taskState == 2" nzStatus="processing" nzText="进行中"></nz-badge>
+                            <nz-badge *ngIf="task.taskState == 3" nzStatus="success" nzText="已完成"></nz-badge>
+
                         </td>
                         <td>
-                            <a>发布</a>
+                            <a (click)="openTaskReleaseModal(task.taskId, task.researchId)" [nzDisabled]="task.taskState == 2 || task.taskState == 3" nz-typography>发布</a>
                             <nz-divider nzType="vertical"></nz-divider>
                             <a (click)="openTaskDetailDrawer(task.taskId)">查看</a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a routerLink="/task/complete" [queryParams]="{taskId: task.taskId}">批改</a>
+                            <a routerLink="/task/complete" [queryParams]="{taskId: task.taskId}" [nzDisabled]="task.taskState != 2" nz-typography>批改</a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a (click)="openTaskDrawer(task.taskId, 0)">编辑</a>
+                            <a (click)="openTaskDrawer(task.taskId, task.researchId)">编辑</a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a>删除</a>
+                            <a nzPopconfirmTitle="确认删除当前任务?" nzPopconfirmPlacement="bottom"
+                               (nzOnConfirm)="deleteTask(task.taskId)" nz-popconfirm>
+                                删除
+                            </a>
                         </td>
                     </tr>
                     </tbody>
@@ -92,14 +99,14 @@
         <!-- 学生选项卡 -->
         <nz-tab nzTitle="学生">
             <div class="tab-container">
-                <div nz-row class="tab-menu" [nzGutter]="16" nzJustify="center">
-                    <div nz-col nzSpan="8">
-                        <input [(ngModel)]="studentName" (ngModelChange)="queryResearchStudent()" placeholder="搜索你的学生"
+                <div nz-row class="tab-menu" [nzGutter]="16">
+                    <div nz-col [nzSpan]="4">
+                        <input [(ngModel)]="studentName" (ngModelChange)="queryStudentList()" placeholder="搜索你的学生"
                                nz-input/>
                     </div>
-                    <div nz-col nzSpan="4">
+                    <div nz-col [nzSpan]="4">
                         <nz-date-picker nzMode="year" [(ngModel)]="studentYear" [nzDisabledDate]="disabledDate"
-                                        (ngModelChange)="queryResearchStudent()"
+                                        (ngModelChange)="queryStudentList()"
                                         nzPlaceHolder="按入学年份筛选"></nz-date-picker>
                     </div>
                 </div>
@@ -120,8 +127,8 @@
                             <nz-divider nzType="vertical"></nz-divider>
                             <a (click)="openStudentFormDrawer(student.studentId)">编辑</a>
                             <nz-divider nzType="vertical"></nz-divider>
-                            <a nz-popconfirm nzPopconfirmTitle="确认删除当前学生?"
-                               nzPopconfirmPlacement="bottom" (nzOnCancel)="deleteStudent(student.studentId)">
+                            <a nzPopconfirmTitle="确认删除当前学生?" nzPopconfirmPlacement="bottom"
+                               (nzOnConfirm)="deleteStudent(student.studentId)" nz-popconfirm>
                                 删除
                             </a>
                         </td>
@@ -143,22 +150,32 @@
             <div class="tab-container" style="width: 50%; margin: 0 auto;">
                 <h4 nz-typography>基本信息</h4>
                 <nz-divider></nz-divider>
-                <form nz-form (ngSubmit)="updateResearch()" style="margin-bottom: 32px;">
+                <form [formGroup]="updateResearchFrom" (ngSubmit)="updateResearch()" style="margin-bottom: 32px;"
+                      nz-form>
                     <nz-form-item>
                         <nz-form-label [nzSpan]="4">研究名称</nz-form-label>
-                        <nz-form-control [nzSpan]="20">
-                            <input type="text" name="researchName" [(ngModel)]="researchName" nz-input/>
+                        <nz-form-control [nzErrorTip]="nameError" [nzSpan]="20" nzHasFeedback>
+                            <input type="text" formControlName="researchName" nz-input/>
+                            <ng-template #nameError let-control>
+                                <ng-container *ngIf="control.hasError('required')">名称不能为空</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">名称最大长度为50</ng-container>
+                            </ng-template>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
                         <nz-form-label [nzSpan]="4">研究内容</nz-form-label>
-                        <nz-form-control [nzSpan]="20">
-                            <textarea name="researchDescription" [(ngModel)]="researchDescription" nz-input></textarea>
+                        <nz-form-control [nzErrorTip]="descriptionError" [nzSpan]="20" nzHasFeedback>
+                            <textarea formControlName="researchDescription" [nzAutosize]="{ minRows: 6 }"
+                                      nz-input></textarea>
+                            <ng-template #descriptionError let-control>
+                                <ng-container *ngIf="control.hasError('required')">内容不能为空</ng-container>
+                                <ng-container *ngIf="control.hasError('maxlength')">内容最大长度为255</ng-container>
+                            </ng-template>
                         </nz-form-control>
                     </nz-form-item>
-                    <nz-form-item nz-row class="register-area">
+                    <nz-form-item class="register-area" nz-row>
                         <nz-form-control [nzSpan]="20" [nzOffset]="4">
-                            <button nz-button nzType="primary">保存</button>
+                            <button nzType="primary" [disabled]="!updateResearchFrom.valid" nz-button>保存</button>
                         </nz-form-control>
                     </nz-form-item>
                 </form>
@@ -177,10 +194,10 @@
                         </button>
                     </div>
                 </div>
-                <nz-modal [(nzVisible)]="deleteResearchModelVisible" nzTitle="是否要删除当前研究?"
+                <nz-modal [(nzVisible)]="deleteResearchModelVisible" nzTitle="是否要删除当前研究？"
                           (nzOnCancel)="toggleDeleteResearchModelVisible()" (nzOnOk)="deleteResearch()">
                     <ng-container *nzModalContent>
-                        <p nz-typography>当前操作不可逆转, 请谨慎操作!</p>
+                        <p nz-typography>当前操作不可逆转，请谨慎操作！</p>
                     </ng-container>
                 </nz-modal>
             </div>
@@ -188,7 +205,8 @@
     </nz-tabset>
 </div>
 
-<app-task-form #taskDrawer></app-task-form>
 <app-task-detail #taskDetailDrawer></app-task-detail>
+<app-task-form (refreshPage)="queryTaskList()" #taskDrawer></app-task-form>
+<app-task-release (refreshPage)="queryTaskList()" #taskReleaseModal></app-task-release>
 <app-student-detail #studentDetailDrawer></app-student-detail>
-<app-student-form #studentFormDrawer></app-student-form>
+<app-student-form (refreshPage)="queryStudentList()" #studentFormDrawer></app-student-form>

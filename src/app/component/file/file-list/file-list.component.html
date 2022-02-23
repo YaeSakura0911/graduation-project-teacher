@@ -1,0 +1,46 @@
+<div class="container">
+    <!-- 菜单 -->
+    <div class="menu" [nzGutter]="16" nz-row>
+        <div [nzSpan]="4" nz-col>
+            <input placeholder="搜索你的文件" nz-input/>
+        </div>
+        <div [nzSpan]="4" nz-col>
+            <nz-select nzPlaceHolder="按研究方向筛选" [(ngModel)]="researchId" nzAllowClear>
+                <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
+                           [nzLabel]="research.researchName"></nz-option>
+            </nz-select>
+        </div>
+        <div [nzSpan]="2" [nzOffset]="14" nz-col>
+            <button nzType="primary" (click)="openFormDrawer()" nz-button>上传文件</button>
+        </div>
+    </div>
+
+    <!-- 表格 -->
+    <nz-table>
+        <thead>
+        <tr>
+            <th>文件名称</th>
+            <th>研究方向</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <a>下载</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a>删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+    <br>
+
+    <!--  分页  -->
+    <nz-pagination></nz-pagination>
+</div>
+
+<app-file-form #fileFormComponent></app-file-form>

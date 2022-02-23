@@ -5,11 +5,11 @@
             <nz-descriptions-item nzTitle="任务名称">{{ taskName }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="研究方向">{{ researchName }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="任务状态">
-                <nz-badge *ngIf="taskState == 0" nzStatus="default" nzText="未发布"></nz-badge>
-                <nz-badge *ngIf="taskState == 1" nzStatus="processing" nzText="进行中"></nz-badge>
-                <nz-badge *ngIf="taskState == 2" nzStatus="success" nzText="已完成"></nz-badge>
+                <nz-badge *ngIf="taskState == 1" nzStatus="default" nzText="未发布"></nz-badge>
+                <nz-badge *ngIf="taskState == 2" nzStatus="processing" nzText="进行中"></nz-badge>
+                <nz-badge *ngIf="taskState == 3" nzStatus="success" nzText="已完成"></nz-badge>
             </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="截止时间">{{ endTime }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="截止时间">{{ endTime | date: "yyyy-MM-dd HH:mm:ss" }}</nz-descriptions-item>
             <nz-descriptions-item nzTitle="任务内容">{{ taskContent }}</nz-descriptions-item>
         </nz-descriptions>
     </ng-container>

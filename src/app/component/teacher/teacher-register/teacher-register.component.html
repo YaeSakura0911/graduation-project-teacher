@@ -1,53 +1,71 @@
 <div class="container">
-    <form nz-form [formGroup]="registerForm" (ngSubmit)="registerTeacher()">
+    <form nz-form [formGroup]="registerTeacherForm" (ngSubmit)="registerTeacher()">
         <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="name" nzRequired>姓名</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="请输入你的姓名">
-                <input type="text" id="name" formControlName="teacherName" maxlength="10" nz-input />
+            <nz-form-label nzFor="teacherName" [nzSpan]="6" nzRequired>姓名</nz-form-label>
+            <nz-form-control [nzErrorTip]="nameError" [nzSpan]="18" nzHasFeedback>
+                <input type="text" id="teacherName" formControlName="teacherName" nz-input/>
+                <ng-template #nameError let-control>
+                    <ng-container *ngIf="control.hasError('required')">姓名不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('pattern')">姓名必须使用中文</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="gender" nzRequired>性别</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="请选择你的性别">
-                <nz-select nzId="gender" formControlName="teacherGender">
-                    <nz-option nzValue="0" nzLabel="男"></nz-option>
-                    <nz-option nzValue="1" nzLabel="女"></nz-option>
+            <nz-form-label nzFor="teacherGender" [nzSpan]="6" nzRequired>性别</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+                <nz-select nzId="teacherGender" formControlName="teacherGender">
+                    <nz-option [nzValue]="0" nzLabel="男"></nz-option>
+                    <nz-option [nzValue]="1" nzLabel="女"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="year" nzRequired>入职年份</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="请选择你的入职年份">
-                <nz-date-picker nzMode="year" nzId="year" formControlName="teacherYear" [nzDisabledDate]="disabledDate"></nz-date-picker>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="telephone">电话</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="">
-                <input type="tel" id="telephone" formControlName="teacherTelephone" maxlength="11" nz-input />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="email">电子邮箱</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="当前电子邮箱不合法">
-                <input type="email" id="email" formControlName="teacherEmail" nz-input />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="password" nzRequired>密码</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzErrorTip="请输入密码">
-                <input type="password" id="password" formControlName="teacherPassword" maxlength="20" nz-input />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSpan]="6" nzFor="checkPassword" nzRequired>确认密码</nz-form-label>
+            <nz-form-label nzFor="teacherYear" [nzSpan]="6" nzRequired>入职年份</nz-form-label>
             <nz-form-control [nzSpan]="18">
-                <input type="password" id="checkPassword" formControlName="checkPassword" maxlength="20" nz-input />
+                <nz-date-picker nzMode="year" nzId="teacherYear" formControlName="teacherYear"
+                                [nzDisabledDate]="disabledDate"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzFor="teacherTelephone">电话</nz-form-label>
+            <nz-form-control [nzSpan]="18" [nzErrorTip]="telephoneError" nzHasFeedback>
+                <input type="tel" id="teacherTelephone" formControlName="teacherTelephone" nz-input/>
+                <ng-template #telephoneError let-control>
+                    <ng-container *ngIf="control.hasError('minlength')">电话最少长度为11</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">电话最大长度为11</ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="teacherEmail" [nzSpan]="6">电子邮箱</nz-form-label>
+            <nz-form-control nzErrorTip="当前电子邮箱不合法" [nzSpan]="18" nzHasFeedback>
+                <input type="email" id="teacherEmail" formControlName="teacherEmail" nz-input/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="teacherPassword" [nzSpan]="6" nzRequired>密码</nz-form-label>
+            <nz-form-control [nzSpan]="18" [nzErrorTip]="passwordError" nzHasFeedback>
+                <input type="password" id="teacherPassword" formControlName="teacherPassword" nz-input/>
+                <ng-template #passwordError let-control>
+                    <ng-container *ngIf="control.hasError('required')">密码不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('minlength')">密码最少长度为6</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">密码最大长度为20</ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="confirmPassword" [nzSpan]="6" nzRequired>确认密码</nz-form-label>
+            <nz-form-control [nzSpan]="18" [nzErrorTip]="confirmPasswordError" nzHasFeedback>
+                <input type="password" id="confirmPassword" formControlName="confirmPassword" nz-input/>
+                <ng-template #confirmPasswordError let-control>
+                    <ng-container *ngIf="control.hasError('required')">确认密码不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('confirm')">两次密码不匹配</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-row class="register-area">
             <nz-form-control [nzSpan]="18" [nzOffset]="6">
-                <button nz-button nzType="primary">注册</button>
+                <button nzType="primary" [disabled]="!registerTeacherForm.valid" nz-button>注册</button>
             </nz-form-control>
         </nz-form-item>
     </form>

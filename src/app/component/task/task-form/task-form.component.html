@@ -1,33 +1,46 @@
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
            [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
-    <form nz-form *nzDrawerContent>
+    <form [formGroup]="shareTaskForm" *nzDrawerContent nz-form>
         <nz-form-item>
-            <nz-form-label>任务名称</nz-form-label>
-            <nz-form-control>
-                <input name="taskName" [(ngModel)]="taskName" nz-input/>
+            <nz-form-label nzFor="taskName" nzRequired>任务名称</nz-form-label>
+            <nz-form-control [nzErrorTip]="nameError">
+                <input type="text" id="taskName" formControlName="taskName" nz-input/>
+                <ng-template #nameError let-control>
+                    <ng-container *ngIf="control.hasError('required')">任务名称不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">任务名称最大长度为50</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label>研究方向</nz-form-label>
+            <nz-form-label nzFor="researchId" nzRequired>研究方向</nz-form-label>
             <nz-form-control>
-                <nz-select name="researchId" [(ngModel)]="researchId">
+                <nz-select nzId="researchId" formControlName="researchId">
                     <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
                                [nzLabel]="research.researchName"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label>任务内容</nz-form-label>
-            <nz-form-control>
-                <textarea name="taskContent" [(ngModel)]="taskContent" [nzAutosize]="{ minRows: 4, maxRows: 4 }"
-                          nz-input></textarea>
+            <nz-form-label nzFor="taskContent" nzRequired>任务内容</nz-form-label>
+            <nz-form-control [nzErrorTip]="contentError">
+                <nz-textarea-count [nzMaxCharacterCount]="255">
+                    <textarea id="taskContent" formControlName="taskContent" [nzAutosize]="{minRows: 4}"
+                              nz-input></textarea>
+                </nz-textarea-count>
+                <ng-template #contentError let-control>
+                    <ng-container *ngIf="control.hasError('required')">任务内容不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">任务内容最大长度为255</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
     </form>
     <ng-template #footerTpl>
         <div style="float: right">
-            <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
-            <button nz-button nzType="primary" (click)="isCreate ? createTask() : updateTask()">保存</button>
+            <button style="margin-right: 8px;" (click)="closeDrawer()" nz-button>取消</button>
+            <button nzType="primary" (click)="isCreate ? createTask() : updateTask()"
+                    [disabled]="!shareTaskForm.valid"
+                    nz-button>保存
+            </button>
         </div>
     </ng-template>
 </nz-drawer>

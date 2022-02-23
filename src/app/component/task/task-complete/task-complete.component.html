@@ -1,20 +1,8 @@
 <div class="container">
-    <div style="display: flex;">
-        <div style="margin-right: 32px;" (click)="onBack()">
-            <i nz-icon style="font-size: 32px;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 24 24" width="32" fill="currentColor">
-                    <path
-                        d="M3.414 7.657l3.95 3.95A1 1 0 0 1 5.95 13.02L.293 7.364a.997.997 0 0 1 0-1.414L5.95.293a1 1 0 1 1 1.414 1.414l-3.95 3.95H13a1 1 0 0 1 0 2H3.414z">
-                    </path>
-                </svg>
-            </i>
-        </div>
-        <div>
-            <h4 nz-typography>任务标题</h4>
-        </div>
-    </div>
+    <!-- 页头 -->
+    <nz-page-header [nzTitle]="taskName" (nzBack)="onBack()" nzBackIcon></nz-page-header>
+
     <nz-divider></nz-divider>
-    <p nz-typography style="margin-bottom: 16px;">任务内容</p>
 
     <!-- 表格 -->
     <nz-table #completeTable [nzData]="completeList" [nzFrontPagination]="false">
@@ -35,7 +23,8 @@
                 <nz-badge *ngIf="complete.completeState == 4" nzStatus="success" nzText="已通过"></nz-badge>
             </td>
             <td>
-                <a (click)="openTaskMarkDrawer(complete.completeId)" [nzDisabled]="complete.completeState == 3 || complete.completeId == 4" nz-typography>查看</a>
+                <a (click)="openTaskMarkDrawer(complete.completeId)"
+                   [nzDisabled]="complete.completeState == 1 || complete.completeId == 3" nz-typography>查看</a>
             </td>
         </tr>
         </tbody>

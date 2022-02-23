@@ -16,10 +16,11 @@
                 <nz-badge *ngIf="completeState == 3" nzStatus="error" nzText="已驳回"></nz-badge>
                 <nz-badge *ngIf="completeState == 4" nzStatus="success" nzText="已通过"></nz-badge>
             </nz-descriptions-item>
-            <nz-descriptions-item nzTitle="提交时间"></nz-descriptions-item>
+            <nz-descriptions-item nzTitle="提交时间">{{updateTime | date: "yyyy-MM-dd HH:mm:ss"}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="提交内容">{{completeContent}}</nz-descriptions-item>
         </nz-descriptions>
-        <p>{{completeContent}}</p>
-        <a nz-button [href]="fileUrl" [disabled]="fileUrl == null" nzType="primary">下载附件</a>
+        <a nzType="primary" [href]="fileUrl" [disabled]="fileUrl == &quot;&quot; || fileUrl == null" nz-button>下载附件</a>
+        <span style="margin-left: 8px">{{fileName}}</span>
     </ng-container>
 
     <ng-template #footerTpl>

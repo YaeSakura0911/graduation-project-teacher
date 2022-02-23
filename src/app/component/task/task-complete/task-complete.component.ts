@@ -13,6 +13,7 @@ import {TaskService} from "../../../service/task.service";
 export class TaskCompleteComponent implements OnInit {
 
     taskId: number = 0;
+    taskName: string = "";
     completeId: number = 0;
     drawerVisible: boolean = false;
 
@@ -35,21 +36,37 @@ export class TaskCompleteComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.queryTask();
         this.queryCompleteList();
     }
 
     onBack() {
-        history.go(-1)
+        history.back();
     }
 
-    // 分页页码改变
+    /**
+     * 分页页码改变
+     */
     pageIndexChange(): void {
         this.queryCompleteList();
     }
 
-    // 分页大小改变
+    /**
+     * 分页大小改变
+     */
     pageSizeChange(): void {
         this.queryCompleteList();
+    }
+
+    /**
+     * 查询任务详情
+     */
+    queryTask(): void {
+        this.taskService.queryTask(this.taskId).subscribe(response => {
+            if (response.code == 200) {
+                this.taskName = response.body.taskName;
+            }
+        })
     }
 
     // 查询完成情况列表

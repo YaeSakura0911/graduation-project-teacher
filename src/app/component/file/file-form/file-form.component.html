@@ -1,0 +1,35 @@
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
+           nzTitle="上传文件"
+           [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
+    <form nz-form *nzDrawerContent>
+        <nz-form-item>
+            <nz-form-label>研究方向</nz-form-label>
+            <nz-form-control>
+                <nz-select name="researchId" [(ngModel)]="researchId">
+                    <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
+                               [nzLabel]="research.researchName"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-upload nzAction="/file/upload" nzType="drag" nzName="file" [nzBeforeUpload]="beforeUpload"
+                           [(nzFileList)]="fileList">
+                    <p class="ant-upload-drag-icon">
+                        <i nz-icon nzType="inbox"></i>
+                    </p>
+                    <p class="ant-upload-text" nz-typography>点击或拖拽文件到这里进行上传。</p>
+                    <p class="ant-upload-hint" nz-typography>
+                        只支持上传doc、docx、xls、xlsx、ppt、pptx、pdf、zip、jpg、jpeg、png格式的文件，且文件大小不超过10Mb
+                    </p>
+                </nz-upload>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
+            <button nz-button nzType="primary" (click)="uploadFile()">上传</button>
+        </div>
+    </ng-template>
+</nz-drawer>

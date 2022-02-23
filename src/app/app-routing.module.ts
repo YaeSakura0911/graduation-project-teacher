@@ -25,6 +25,23 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         data: { breadcrumb: '学生列表' },
         loadChildren: () => import('./module/student/student.module').then(m => m.StudentModule)
+    },
+    {
+        path: 'notice',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: '通知列表' },
+        loadChildren: () => import('./module/notice/notice.module').then(m => m.NoticeModule)
+    },
+    {
+        path: 'file',
+        canActivate: [AuthGuard],
+        data: { breadcrumb: '文件列表' },
+        loadChildren: () => import('./module/file/file.module').then(m => m.FileModule)
+    },
+    {
+        path: '',
+        redirectTo: '/user/login',
+        pathMatch: "full"
     }
 ];
 

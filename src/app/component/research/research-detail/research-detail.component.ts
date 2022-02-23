@@ -10,7 +10,6 @@ import {StudentService} from 'src/app/service/student.service';
 import {TaskService} from 'src/app/service/task.service';
 
 import {QueryTaskListForm} from 'src/app/form/query-task-list-form';
-import {UpdateResearchForm} from 'src/app/form/update-research-form';
 import {QueryStudentListForm} from 'src/app/form/query-student-list-form';
 
 import {Student} from 'src/app/entity/student.entity';
@@ -21,6 +20,9 @@ import {StudentDetailComponent} from '../../student/student-detail/student-detai
 import {TaskDetailComponent} from "../../task/task-detail/task-detail.component";
 import {QueryCompleteListForm} from "../../../form/query-complete-list-form";
 import {CompleteEntity} from "../../../entity/complete.entity";
+import {StorageUtil} from "../../../util/storage.util";
+import {FormBuilder, Validators} from "@angular/forms";
+import {TaskReleaseComponent} from "../../task/task-release/task-release.component";
 
 @Component({
     selector: 'app-research-detail',
@@ -31,8 +33,6 @@ export class ResearchDetailComponent implements OnInit {
 
     teacherId: number = 0;
     researchId: number = 0;
-    researchName: string = "";
-    researchDescription: string = "";
     studentName: string = "";
     studentYear: Date | null = null;
     taskName: string = "";
@@ -48,26 +48,41 @@ export class ResearchDetailComponent implements OnInit {
     today: Date = new Date();
     disabledDate = (current: Date): boolean => differenceInCalendarDays(current, this.today) > 0;
     deleteResearchModelVisible: boolean = false;
-    // time: string = formatDistance(new Date(), new Date);
     studentList: Student[] = [];
     taskList: TaskEntity[] = [];
     completeList: CompleteEntity[] = [];
+
+    updateResearchFrom = this.formBuilder.group({
+        researchId: [],
+        researchName: [null, [
+            Validators.required,
+            Validators.maxLength(50)
+        ]],
+        researchDescription: [null, [
+            Validators.required,
+            Validators.maxLength(255)
+        ]]
+    })
 
     @ViewChild('taskDrawer')
     taskDrawer!: TaskFormComponent;
     @ViewChild('taskDetailDrawer')
     taskDetailDrawer!: TaskDetailComponent;
+    @ViewChild('taskReleaseModal')
+    taskReleaseModal!: TaskReleaseComponent;
     @ViewChild('studentDetailDrawer')
     studentDetailDrawer!: StudentDetailComponent;
     @ViewChild('studentFormDrawer')
     studentFormDrawer!: StudentFormComponent;
 
     constructor(
+        private formBuilder: FormBuilder,
+        private messageService: NzMessageService,
         private route: ActivatedRoute,
         private researchService: ResearchService,
+        private storageUtil: StorageUtil,
         private studentService: StudentService,
-        private taskService: TaskService,
-        private messageService: NzMessageService
+        private taskService: TaskService
     ) {
         this.route.queryParams.subscribe((res) => {
             this.researchId = Number(res['researchId']);
@@ -80,20 +95,23 @@ export class ResearchDetailComponent implements OnInit {
 
     // 初始化页面
     ngOnInit(): void {
-        this.teacherId = Number(localStorage.getItem('teacherId'));
-        this.queryResearchDetail(this.researchId);
-        this.queryResearchTask();
-        this.queryResearchStudent();
+        this.teacherId = this.storageUtil.get("auth").teacherId;
+        this.queryResearch(this.researchId);
+        this.queryTaskList();
+        this.queryStudentList();
         this.queryCompleteList();
     }
 
-    // 删除研究
+    /**
+     * 删除研究
+     */
     deleteResearch(): void {
         // 发送请求
         this.researchService.deleteResearch(this.researchId).subscribe(response => {
             console.log(response);
             if (response.code == 200 && response.body == true) {
                 this.messageService.success('删除研究成功!');
+                history.back();
             } else {
                 this.messageService.error('删除研究失败!');
             }
@@ -101,23 +119,33 @@ export class ResearchDetailComponent implements OnInit {
         })
     }
 
-    // 删除任务
+    /**
+     * 删除任务
+     * @param taskId 任务ID
+     */
     deleteTask(taskId: number): void {
         this.taskService.deleteTask(taskId).subscribe(response => {
-            console.log(response);
             if (response.code == 200 && response.body == true) {
-                this.messageService.success('删除任务成功!');
+                this.messageService.success('删除任务成功！');
+            } else {
+                this.messageService.error('删除任务失败！');
             }
+            this.queryTaskList();
         })
     }
 
-    // 删除学生
+    /**
+     * 删除学生
+     * @param studentId 学生ID
+     */
     deleteStudent(studentId: number): void {
         this.studentService.deleteStudent(studentId).subscribe(response => {
-            console.log(response);
             if (response.code == 200 && response.body == true) {
                 this.messageService.success('删除学生成功!');
+            } else {
+                this.messageService.error('删除学生失败!');
             }
+            this.queryStudentList();
         })
     }
 
@@ -137,17 +165,24 @@ export class ResearchDetailComponent implements OnInit {
         })
     }
 
-    // 查询研究详情
-    queryResearchDetail(researchId: number): void {
+    /**
+     * 查询研究详情
+     * @param researchId 研究ID
+     */
+    queryResearch(researchId: number): void {
         // 发送请求
         this.researchService.queryResearch(researchId).subscribe(response => {
-            this.researchName = response.body.researchName;
-            this.researchDescription = response.body.researchDescription;
+            if (response.code == 200) {
+                this.updateResearchFrom.patchValue({
+                    researchName: response.body.researchName,
+                    researchDescription: response.body.researchDescription
+                })
+            }
         })
     }
 
     // 查询任务列表
-    queryResearchTask(): void {
+    queryTaskList(): void {
         let form: QueryTaskListForm = new QueryTaskListForm(
             this.teacherId,
             this.researchId,
@@ -168,7 +203,7 @@ export class ResearchDetailComponent implements OnInit {
     }
 
     // 查询学生列表
-    queryResearchStudent(): void {
+    queryStudentList(): void {
         let form: QueryStudentListForm = new QueryStudentListForm(
             this.teacherId,
             this.studentName,
@@ -188,32 +223,29 @@ export class ResearchDetailComponent implements OnInit {
     }
 
     studentPageIndexChange(): void {
-        this.queryResearchStudent();
+        this.queryStudentList();
     }
 
     studentPageSizeChange(): void {
-        this.queryResearchStudent();
+        this.queryStudentList();
     }
 
     // 分页页码发生改变
     taskPageIndexChange(): void {
-        this.queryResearchTask();
+        this.queryTaskList();
     }
 
     // 分页大小发生改变
     taskPageSizeChange(): void {
-        this.queryResearchTask();
+        this.queryTaskList();
     }
 
-    // 更新研究信息
+    /**
+     * 更新研究信息
+     */
     updateResearch(): void {
-        let updateResearchFrom: UpdateResearchForm = new UpdateResearchForm(
-            this.teacherId,
-            this.researchId,
-            this.researchName,
-            this.researchDescription
-        );
-        this.researchService.updateResearch(updateResearchFrom).subscribe(response => {
+        this.updateResearchFrom.patchValue({researchId: this.researchId});
+        this.researchService.updateResearch(this.updateResearchFrom.value).subscribe(response => {
             console.log(response);
             if (response.code == 200 && response.body == true) {
                 this.messageService.success('更新研究信息成功!');
@@ -221,7 +253,7 @@ export class ResearchDetailComponent implements OnInit {
                 this.messageService.error('更新研究信息失败!');
             }
             // 重新查询研究详情
-            this.queryResearchDetail(this.researchId);
+            this.queryResearch(this.researchId);
         })
     }
 
@@ -235,6 +267,10 @@ export class ResearchDetailComponent implements OnInit {
 
     openTaskDetailDrawer(taskId: number): void {
         this.taskDetailDrawer.openDrawer(taskId);
+    }
+
+    openTaskReleaseModal(taskId: number, researchId: number): void {
+        this.taskReleaseModal.openModal(taskId, researchId);
     }
 
     openStudentDetailDrawer(studentId: number): void {

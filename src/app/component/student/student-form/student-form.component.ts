@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
-import { differenceInCalendarDays, getYear } from 'date-fns';
+import {differenceInCalendarDays, getYear} from 'date-fns';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { ResearchService } from 'src/app/service/research.service';
-import { StudentService } from 'src/app/service/student.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {ResearchService} from 'src/app/service/research.service';
+import {StudentService} from 'src/app/service/student.service';
 
-import { Research } from 'src/app/entity/research.entity';
-import { RegisterStudentForm } from 'src/app/form/register-student-form';
-import { UpdateStudentForm } from 'src/app/form/update-student-form';
-import { QueryResearchListForm } from 'src/app/form/query-research-list-form';
+import {Research} from 'src/app/entity/research.entity';
+import {UpdateStudentForm} from 'src/app/form/update-student-form';
+import {QueryResearchListForm} from 'src/app/form/query-research-list-form';
+import {FormBuilder, Validators} from "@angular/forms";
+import {StorageUtil} from "../../../util/storage.util";
 
 @Component({
     selector: 'app-student-form',
@@ -31,15 +32,33 @@ export class StudentFormComponent implements OnInit {
     today: Date = new Date();
     disabledDate = (current: Date): boolean => differenceInCalendarDays(current, this.today) > 0;
 
+    @Output()
+    refreshPage = new EventEmitter<any>();
+
+    shareStudentForm = this.formBuilder.group({
+        studentId: [null],
+        studentName: [null, [
+            Validators.required,
+            Validators.pattern("^[\u4e00-\u9fa5]+(·[\u4e00-\u9fa5]+)*$"),
+            Validators.maxLength(10)
+        ]],
+        studentYear: [null, Validators.required],
+        studentGender: [null, Validators.required],
+        researchId: [null, Validators.required],
+    })
+
     constructor(
+        private formBuilder: FormBuilder,
+        private messageService: NzMessageService,
         private researchService: ResearchService,
         private studentService: StudentService,
-        private messageService: NzMessageService
-    ) { }
+        private storageUtil: StorageUtil
+    ) {
+    }
 
     // 页面初始化
     ngOnInit(): void {
-        this.teacherId = localStorage.getItem('teacherId') || "";
+        this.teacherId = this.storageUtil.get("auth").teacherId;
         this.queryResearchList(this.teacherId);
     }
 
@@ -56,23 +75,24 @@ export class StudentFormComponent implements OnInit {
         })
     }
 
-    // 学生注册
+    /**
+     * 学生注册
+     */
     registerStudent(): void {
-        // 注册学生表单
-        let registerStudentForm: RegisterStudentForm = new RegisterStudentForm(
-            this.studentName,
-            this.studentYear,
-            this.studentGender,
-            this.researchId
-        )
+        this.shareStudentForm.patchValue(
+            {studentYear: getYear(this.shareStudentForm.value['studentYear']).toString()}
+        );
         // 发起请求
-        this.studentService.registerStudent(registerStudentForm).subscribe(response => {
-            console.log(response);
-            if(response.body == true) {
+        this.studentService.registerStudent(this.shareStudentForm.value).subscribe(response => {
+            console.log("registerStudent()", response);
+            if (response.code == 200 && response.body == true) {
                 this.messageService.success('学生注册成功');
-                this.closeDrawer();
-                // TODO: 刷新页面
             }
+            else {
+                this.messageService.error("学生注册失败！");
+            }
+            this.refreshPage.emit();
+            this.closeDrawer();
         })
     }
 
@@ -81,34 +101,30 @@ export class StudentFormComponent implements OnInit {
         // 发起请求
         this.studentService.queryStudent(studentId).subscribe(response => {
             console.log(response)
-            if(response.code == 200) {
-                this.studentName = response.body.studentName;
-                this.studentYear = response.body.studentYear;
-                this.studentGender = response.body.studentGender;
-                this.researchId = response.body.researchId;
+            if (response.code == 200) {
+                this.shareStudentForm.patchValue({
+                    studentName: response.body.studentName,
+                    studentYear: response.body.studentYear,
+                    studentGender: response.body.studentGender,
+                    researchId: response.body.researchId
+                })
             }
         })
     }
 
-    // 修改学生信息
+    /**
+     * 修改学生信息
+     */
     updateStudent(): void {
-        let updateStudentForm: UpdateStudentForm = new UpdateStudentForm(
-            this.studentId,
-            this.studentGender,
-            this.researchId
-        )
-
-        console.log(updateStudentForm);
-
         // 发起请求
-        this.studentService.updateStudent(updateStudentForm).subscribe(response => {
+        this.studentService.updateStudent(this.shareStudentForm.value).subscribe(response => {
             console.log(response);
-            if(response.code == 200 && response.body == true) {
+            if (response.code == 200 && response.body == true) {
                 this.messageService.success('更新学生信息成功!');
-            }
-            else {
+            } else {
                 this.messageService.error('更新学生信息失败!');
             }
+            this.refreshPage.emit();
             this.closeDrawer();
         })
     }
@@ -116,14 +132,17 @@ export class StudentFormComponent implements OnInit {
     // 打开抽屉
     openDrawer(studentId: number): void {
         this.drawerVisible = true;
-        if(studentId == 0) {
+        if (studentId == 0) {
             this.isRegister = true;
+            this.shareStudentForm.controls['studentName'].enable();
+            this.shareStudentForm.controls['studentYear'].enable();
             this.drawerTitle = "注册学生";
-        }
-        else {
+        } else {
             this.isRegister = false;
+            this.shareStudentForm.controls['studentName'].disable();
+            this.shareStudentForm.controls['studentYear'].disable();
             this.drawerTitle = "更新学生";
-            this.studentId = studentId;
+            this.shareStudentForm.patchValue({studentId: studentId});
             this.queryStudent(studentId);
         }
     }
@@ -132,10 +151,7 @@ export class StudentFormComponent implements OnInit {
     closeDrawer(): void {
         this.drawerVisible = false;
         // 清空数据
-        this.researchId = 0;
-        this.studentName = "";
-        this.studentYear = null;
-        this.studentGender = 0;
+        this.shareStudentForm.reset();
     }
 
 }

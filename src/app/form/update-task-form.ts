@@ -6,6 +6,7 @@ export class UpdateTaskForm {
         public taskName: string,
         public taskContent: string,
         public taskState: number,
-        public endTime: Date | null
+        public endTime: Date | null,
+        public studentIdList: number[]
     ) { }
 }

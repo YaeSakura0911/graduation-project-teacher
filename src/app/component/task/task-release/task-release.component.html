@@ -1,0 +1,31 @@
+<nz-modal nzTitle="发布任务" (nzOnCancel)="closeModal()" [nzMaskClosable]="false" [(nzVisible)]="modalVisible">
+    <div *nzModalContent>
+        <form [formGroup]="releaseTaskForm" nz-form>
+            <nz-form-item>
+                <nz-form-label nzFor="endTime" nzRequired>截止时间</nz-form-label>
+                <nz-form-control>
+                    <nz-date-picker nzId="endTime" formControlName="endTime" nzFormat="yyyy-MM-dd HH:mm:ss"
+                                    nzPlaceHolder="请选择截止日期"
+                                    nzShowTime></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>任务对象</nz-form-label>
+                <nz-form-control>
+                    <nz-checkbox-wrapper (nzOnChange)="checkedChange($event)">
+                        <div nz-row>
+                            <div nz-col *ngFor="let student of studentList" [nzSpan]="8">
+                                <label nz-checkbox [nzValue]="student.studentId">{{student.studentName}}
+                                    -{{student.studentYear | date: "yyyy"}}</label>
+                            </div>
+                        </div>
+                    </nz-checkbox-wrapper>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
+    <div *nzModalFooter>
+        <button (click)="closeModal()" nz-button>取消</button>
+        <button nzType="primary" (click)="updateTask()" [disabled]="!releaseTaskForm.valid" nz-button>发布</button>
+    </div>
+</nz-modal>

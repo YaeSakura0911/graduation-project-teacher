@@ -1,19 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
-import { Student } from 'src/app/entity/student.entity';
-import { Research } from 'src/app/entity/research.entity';
+import {Student} from 'src/app/entity/student.entity';
+import {Research} from 'src/app/entity/research.entity';
 
-import { QueryStudentListForm } from 'src/app/form/query-student-list-form';
+import {QueryStudentListForm} from 'src/app/form/query-student-list-form';
 
-import { StudentService } from 'src/app/service/student.service';
-import { ResearchService } from 'src/app/service/research.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
+import {StudentService} from 'src/app/service/student.service';
+import {ResearchService} from 'src/app/service/research.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
 
-import { StudentFormComponent } from '../student-form/student-form.component';
+import {StudentFormComponent} from '../student-form/student-form.component';
 
-import { differenceInCalendarDays, getYear } from 'date-fns';
-import { StudentDetailComponent } from '../student-detail/student-detail.component';
-import { QueryResearchListForm } from 'src/app/form/query-research-list-form';
+import {differenceInCalendarDays} from 'date-fns';
+import {StudentDetailComponent} from '../student-detail/student-detail.component';
+import {QueryResearchListForm} from 'src/app/form/query-research-list-form';
+import {StorageUtil} from "../../../util/storage.util";
 
 @Component({
     selector: 'app-student-list',
@@ -34,7 +35,7 @@ export class StudentListComponent implements OnInit {
     total!: number;
 
     today: Date = new Date();
-    disabledDate = (current: Date):boolean => differenceInCalendarDays(current, this.today) > 0;
+    disabledDate = (current: Date): boolean => differenceInCalendarDays(current, this.today) > 0;
 
     @ViewChild('studentFormDrawer')
     studentFormDrawer!: StudentFormComponent;
@@ -44,12 +45,14 @@ export class StudentListComponent implements OnInit {
     constructor(
         private studentService: StudentService,
         private researchService: ResearchService,
-        private messageService: NzMessageService
-    ) { }
+        private messageService: NzMessageService,
+        private storageUtil: StorageUtil
+    ) {
+    }
 
     // 初始化页面
     ngOnInit(): void {
-        this.teacherId = Number(localStorage.getItem('teacherId'));
+        this.teacherId = this.storageUtil.get("auth").teacherId;
         this.queryStudentList();
         this.queryResearchList();
     }
@@ -69,7 +72,7 @@ export class StudentListComponent implements OnInit {
         // 发起请求
         this.studentService.queryStudentList(form).subscribe(response => {
             console.log(response);
-            if(response.code == 200) {
+            if (response.code == 200) {
                 this.studentList = response.body.studentList;
                 this.total = response.body.total;
             }
@@ -85,7 +88,7 @@ export class StudentListComponent implements OnInit {
         // 查询研究列表
         this.researchService.queryResearchList(queryResearchListForm).subscribe(response => {
             console.log(response);
-            if(response.code == 200) {
+            if (response.code == 200) {
                 this.researchList = response.body;
             }
         })
@@ -95,7 +98,7 @@ export class StudentListComponent implements OnInit {
     queryStudent(studentId: number): void {
         this.studentService.deleteStudent(studentId).subscribe(response => {
             console.log(response);
-            if(response.code == 200) {
+            if (response.code == 200) {
 
             }
         })
@@ -106,7 +109,7 @@ export class StudentListComponent implements OnInit {
         // 发起请求
         this.studentService.deleteStudent(studentId).subscribe(response => {
             console.log(response);
-            if(response.code == 200 && response.body == true) {
+            if (response.code == 200 && response.body == true) {
                 this.messageService.success('删除学生成功!');
                 this.queryStudentList();
             }

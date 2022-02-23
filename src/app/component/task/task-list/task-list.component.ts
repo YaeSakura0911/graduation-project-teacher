@@ -1,5 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 import {TaskEntity} from 'src/app/entity/task.entity';
 import {Research} from 'src/app/entity/research.entity';
@@ -13,7 +12,11 @@ import {TaskService} from 'src/app/service/task.service';
 
 import {TaskFormComponent} from '../task-form/task-form.component';
 import {TaskDetailComponent} from "../task-detail/task-detail.component";
-import {UpdateTaskForm} from "../../../form/update-task-form";
+import {StorageUtil} from "../../../util/storage.util";
+import {StudentService} from "../../../service/student.service";
+import {Student} from "../../../entity/student.entity";
+import {FormBuilder} from "@angular/forms";
+import {TaskReleaseComponent} from "../task-release/task-release.component";
 
 @Component({
     selector: 'app-task-list',
@@ -33,41 +36,44 @@ export class TaskListComponent implements OnInit {
     total!: number;
 
     researchList: Research[] = [];
+    studentList: Student[] = [];
     taskList: TaskEntity[] = [];
+    studentIdList: number[] = [];
 
-    taskReleaseModelVisible: boolean = false;
+    // taskReleaseModelVisible: boolean = false;
 
     @ViewChild('taskDetailDrawer')
     taskDetailDrawer!: TaskDetailComponent;
     @ViewChild('taskFormDrawer')
     taskFormDrawer!: TaskFormComponent;
+    @ViewChild('taskReleaseComponent')
+    taskReleaseModal!: TaskReleaseComponent;
+
+    // releaseTaskForm = new FormBuilder().group({
+    //    endTime: [null, Validators.required],
+    //     studentIdList: [null, Validators.required],
+    // });
 
     constructor(
-        private researchService: ResearchService,
-        private taskService: TaskService,
+        private formBuilder: FormBuilder,
         private messageService: NzMessageService,
-        private modalService: NzModalService
+        private researchService: ResearchService,
+        private studentService: StudentService,
+        private storageUtil: StorageUtil,
+        private taskService: TaskService,
     ) {
     }
 
     // 页面初始化
     ngOnInit(): void {
-        this.teacherId = Number(localStorage.getItem('teacherId'));
+        this.teacherId = this.storageUtil.get("auth").teacherId;
         this.queryResearchList();
         this.queryTaskList();
     }
 
-    createTplModal(tplTitle: TemplateRef<{}>, tplContent: TemplateRef<{}>, tplFooter: TemplateRef<{}>, taskId: number): void {
-        this.modalService.create({
-            nzTitle: tplTitle,
-            nzContent: tplContent,
-            nzFooter: tplFooter,
-            nzMaskClosable: false,
-            nzClosable: false,
-            nzComponentParams: {
-                value: taskId
-            },
-        });
+    // 复选框改变
+    checkedChange(event: any): void {
+        this.studentIdList = event;
     }
 
     // 删除任务
@@ -97,6 +103,24 @@ export class TaskListComponent implements OnInit {
         })
     }
 
+    // 查询学生列表
+    // queryStudentList(researchId: number): void {
+    //     let form = new QueryStudentListForm(
+    //         this.teacherId,
+    //         "",
+    //         researchId,
+    //         null,
+    //         0,
+    //         0
+    //     );
+    //     this.studentService.queryStudentList(form).subscribe(response => {
+    //         console.log("queryStudentList()", response);
+    //         if (response.code == 200) {
+    //             this.studentList = response.body.studentList;
+    //         }
+    //     })
+    // }
+
     // 查询任务列表
     queryTaskList(): void {
         // 查询任务列表表单
@@ -120,30 +144,30 @@ export class TaskListComponent implements OnInit {
     }
 
     // 更新任务
-    updateTask(modelRef: NzModalRef, taskId: number): void {
-        // 更新任务表单
-        let updateTaskForm = new UpdateTaskForm(
-            taskId,
-            0,
-            "",
-            "",
-            2,
-            this.endTime
-        )
-        console.log(updateTaskForm);
-        modelRef.destroy();
-        // 发起请求
-        this.taskService.updateTask(updateTaskForm).subscribe(response => {
-            console.log("updateTask()", response);
-            if (response.code == 200 && response.body == true) {
-                this.messageService.success("发布任务成功!");
-            }
-            else {
-                this.messageService.error("发布任务失败!");
-            }
-            this.queryTaskList();
-        })
-    }
+    // updateTask(modelRef: NzModalRef, taskId: number): void {
+    //     // 更新任务表单
+    //     let form = new UpdateTaskForm(
+    //         taskId,
+    //         0,
+    //         "",
+    //         "",
+    //         2,
+    //         this.endTime,
+    //         this.studentIdList
+    //     );
+    //     console.log(form);
+    //     modelRef.destroy();
+    //     // 发起请求
+    //     this.taskService.updateTask(form).subscribe(response => {
+    //         console.log("updateTask()", response);
+    //         if (response.code == 200 && response.body == true) {
+    //             this.messageService.success("发布任务成功!");
+    //         } else {
+    //             this.messageService.error("发布任务失败!");
+    //         }
+    //         this.queryTaskList();
+    //     })
+    // }
 
     // 打开表单抽屉
     openTaskFormDrawer(taskId: number, researchId: number): void {
@@ -155,6 +179,10 @@ export class TaskListComponent implements OnInit {
         this.taskDetailDrawer.openDrawer(taskId);
     }
 
+    openTaskReleaseModal(taskId: number, researchId: number): void {
+        this.taskReleaseModal.openModal(taskId, researchId);
+    }
+
     pageIndexChange(): void {
         this.queryTaskList();
     }
@@ -162,9 +190,4 @@ export class TaskListComponent implements OnInit {
     pageSizeChange(): void {
         this.queryTaskList();
     }
-
-    taskReleaseModelVisibleToggle(): void {
-        this.taskReleaseModelVisible = !this.taskReleaseModelVisible;
-    }
-
 }

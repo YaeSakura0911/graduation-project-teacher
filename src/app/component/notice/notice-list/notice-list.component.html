@@ -1,0 +1,54 @@
+<div class="container">
+    <!-- 菜单 -->
+    <div nz-row class="menu" [nzGutter]="16">
+        <div [nzSpan]="4" nz-col>
+            <input placeholder="按关键字筛选" nz-input/>
+        </div>
+        <div [nzSpan]="4" nz-col>
+            <nz-select nzPlaceHolder="按通知优先级筛选">
+                <nz-option [nzValue]="1" nzLabel="普通"></nz-option>
+                <nz-option [nzValue]="2" nzLabel="重要"></nz-option>
+                <nz-option [nzValue]="3" nzLabel="紧急"></nz-option>
+            </nz-select>
+        </div>
+        <div [nzSpan]="2" [nzOffset]="14" nz-col>
+            <button nzType="primary" nz-button>创建通知</button>
+        </div>
+    </div>
+
+    <!-- 表格 -->
+    <nz-table #noticeTable [nzFrontPagination]="false">
+        <thead>
+        <tr>
+            <th>通知标题</th>
+            <th>研究方向</th>
+            <th>通知优先级</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let notice of noticeTable.data">
+            <td>{{notice.noticeTitle}}</td>
+            <td>{{notice.researchName}}</td>
+            <td>
+                <nz-badge *ngIf="notice.taskState == 1" nzColor="blue" nzText="普通"></nz-badge>
+                <nz-badge *ngIf="notice.taskState == 2" nzColor="orange" nzText="重要"></nz-badge>
+                <nz-badge *ngIf="notice.taskState == 3" nzColor="red" nzText="紧急"></nz-badge>
+            </td>
+            <td>
+                <a>发布</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a>查看</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a>编辑</a>
+                <nz-divider nzType="vertical"></nz-divider>
+                <a>删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </nz-table>
+
+    <br>
+
+    <nz-pagination nzShowSizeChanger></nz-pagination>
+</div>

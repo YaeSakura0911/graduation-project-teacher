@@ -1,23 +1,35 @@
-<div class="container" style="width: 50%; margin: 0 auto;">
-    <h3 nz-typography>创建研究</h3>
+<div class="container">
+    <nz-page-header nzTitle="创建研究" (nzBack)="goBack()" nzBackIcon></nz-page-header>
     <nz-divider></nz-divider>
-    <form nz-form (ngSubmit)="createResearch()">
-        <nz-form-item>
-            <nz-form-label nzSpan="4">研究名称</nz-form-label>
-            <nz-form-control  nzSpan="16">
-                <input type="text" name="researchName" [(ngModel)]="researchName" nz-input />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label nzSpan="4">研究内容</nz-form-label>
-            <nz-form-control nzSpan="16">
-                <textarea name="researchDescription" [(ngModel)]="researchDescription" nz-input></textarea>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-control nzSpan="16" nzOffset="4">
-                <button nzType="primary" nz-button>创建</button>
-            </nz-form-control>
-        </nz-form-item>
-    </form>
+    <div class="content">
+        <form [formGroup]="createResearchForm" (ngSubmit)="createResearch()" nz-form>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="4">研究名称</nz-form-label>
+                <nz-form-control [nzErrorTip]="nameError" [nzSpan]="16">
+                    <input type="text" formControlName="researchName" nz-input/>
+                    <ng-template #nameError let-control>
+                        <ng-container *ngIf="control.hasError('required')">名称不能为空</ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">名称最大长度为50</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="4">研究内容</nz-form-label>
+                <nz-form-control [nzErrorTip]="descriptionError" [nzSpan]="16">
+                    <nz-textarea-count [nzMaxCharacterCount]="255">
+                        <textarea formControlName="researchDescription" [nzAutosize]="{minRows: 6}" nz-input></textarea>
+                    </nz-textarea-count>
+                    <ng-template #descriptionError let-control>
+                        <ng-container *ngIf="control.hasError('required')">研究内容不能为空</ng-container>
+                        <ng-container *ngIf="control.hasError('maxlength')">内容最大长度为255</ng-container>
+                    </ng-template>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control [nzSpan]="16" [nzOffset]="4">
+                    <button nzType="primary" [disabled]="!createResearchForm.valid" nz-button>创建</button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </div>
 </div>

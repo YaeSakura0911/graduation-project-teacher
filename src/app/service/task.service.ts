@@ -66,7 +66,7 @@ export class TaskService {
      * 更新完成情况
      * @param form 更新完成情况表单
      */
-    updateComplete(form: UpdateCompleteForm): Observable<any> {
+    updateComplete(form: any): Observable<any> {
         return this.http.put("/task/complete", form);
     }
 
@@ -74,7 +74,7 @@ export class TaskService {
      * 更新任务
      * @param form 更新任务表单
      */
-    updateTask(form: UpdateTaskForm): Observable<any> {
+    updateTask(form: Object): Observable<any> {
         return this.http.put("/task", form);
     }
 }

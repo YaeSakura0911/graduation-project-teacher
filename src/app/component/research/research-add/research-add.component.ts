@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
 
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { CreateResearchForm } from 'src/app/form/create-research-form';
-import { ResearchService } from 'src/app/service/research.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {ResearchService} from 'src/app/service/research.service';
+import {StorageUtil} from "../../../util/storage.util";
 
 @Component({
     selector: 'app-research-add',
@@ -17,29 +16,42 @@ export class ResearchAddComponent implements OnInit {
     researchName: string = "";
     researchDescription: string = "";
 
+    createResearchForm = this.formBuilder.group({
+        teacherId: [null],
+        researchName: [null, [
+            Validators.required,
+            Validators.maxLength(50)
+        ]],
+        researchDescription: [null, [
+            Validators.required,
+            Validators.maxLength(255)
+        ]]
+    })
+
     constructor(
-        private researchService: ResearchService,
         private formBuilder: FormBuilder,
         private messageService: NzMessageService,
-        private router: Router
-    ) { }
+        private researchService: ResearchService,
+        private storageUtil: StorageUtil
+    ) {
+    }
 
     ngOnInit(): void {
-        this.teacherId = Number(localStorage.getItem('teacherId'));
+        this.teacherId = this.storageUtil.get("auth").teacherId;
+    }
+
+    goBack() {
+        history.back();
     }
 
     // 创建研究
     createResearch(): void {
-        let createResearchForm: CreateResearchForm = new CreateResearchForm(
-            this.teacherId,
-            this.researchName,
-            this.researchDescription
-        );
-        this.researchService.createResearch(createResearchForm).subscribe(response => {
+        this.createResearchForm.patchValue({teacherId: this.teacherId})
+        this.researchService.createResearch(this.createResearchForm.value).subscribe(response => {
             console.log(response);
-            if(response.body == true) {
+            if (response.body == true) {
                 this.messageService.success('创建研究成功');
-                this.router.navigateByUrl("/research");
+                this.goBack();
             }
         })
     }

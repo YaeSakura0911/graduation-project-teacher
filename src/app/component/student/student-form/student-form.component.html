@@ -1,32 +1,37 @@
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
     [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
-    <form nz-form *nzDrawerContent>
+    <form [formGroup]="shareStudentForm" nz-form *nzDrawerContent>
         <nz-form-item>
-            <nz-form-label>学生姓名</nz-form-label>
-            <nz-form-control>
-                <input [(ngModel)]="studentName" name="studentName" [disabled]="!isRegister" nz-input />
+            <nz-form-label nzFor="studentName" nzRequired>学生姓名</nz-form-label>
+            <nz-form-control [nzErrorTip]="nameError">
+                <input id="studentName" formControlName="studentName" nz-input />
+                <ng-template #nameError let-control>
+                    <ng-container *ngIf="control.hasError('required')">姓名不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">姓名长度最大为10</ng-container>
+                    <ng-container *ngIf="control.hasError('pattern')">姓名只能用中文</ng-container>
+                </ng-template>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label>入学年份</nz-form-label>
+            <nz-form-label nzRequired>入学年份</nz-form-label>
             <nz-form-control>
-                <nz-date-picker nzMode="year" name="studentYear" [(ngModel)]="studentYear" [nzDisabledDate]="disabledDate" [nzDisabled]="!isRegister">
+                <nz-date-picker nzMode="year" formControlName="studentYear" [nzDisabledDate]="disabledDate">
                 </nz-date-picker>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label>学生性别</nz-form-label>
+            <nz-form-label nzRequired>学生性别</nz-form-label>
             <nz-form-control>
-                <nz-select [(ngModel)]="studentGender" name="studentGender">
+                <nz-select formControlName="studentGender">
                     <nz-option [nzValue]="0" nzLabel="男"></nz-option>
                     <nz-option [nzValue]="1" nzLabel="女"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label>研究方向</nz-form-label>
+            <nz-form-label nzRequired>研究方向</nz-form-label>
             <nz-form-control>
-                <nz-select [(ngModel)]="researchId" name="researchId">
+                <nz-select formControlName="researchId">
                     <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
                         [nzLabel]="research.researchName"></nz-option>
                 </nz-select>
@@ -37,7 +42,7 @@
     <ng-template #footerTpl>
         <div style="float: right">
             <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
-            <button nz-button nzType="primary" (click)="isRegister ? registerStudent() : updateStudent()">保存</button>
+            <button nz-button nzType="primary" [disabled]="!shareStudentForm.valid" (click)="isRegister ? registerStudent() : updateStudent()">保存</button>
         </div>
     </ng-template>
 </nz-drawer>
