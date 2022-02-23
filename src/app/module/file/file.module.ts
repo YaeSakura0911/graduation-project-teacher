@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 import {FileFormComponent} from "../../component/file/file-form/file-form.component";
 import {FileListComponent} from "../../component/file/file-list/file-list.component";
@@ -49,7 +49,8 @@ import {NzMessageModule} from "ng-zorro-antd/message";
         NzUploadModule,
         NzTableModule,
         NzDrawerModule,
-        NzMessageModule
+        NzMessageModule,
+        ReactiveFormsModule
     ]
 })
 export class FileModule {

@@ -1,11 +1,10 @@
-<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
-           nzTitle="上传文件"
-           [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
-    <form nz-form *nzDrawerContent>
+<nz-drawer nzTitle="上传文件" [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560"
+           [nzVisible]="drawerVisible" [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
+    <form [formGroup]="uploadFileForm" nz-form *nzDrawerContent>
         <nz-form-item>
-            <nz-form-label>研究方向</nz-form-label>
+            <nz-form-label nzFor="researchId" nzRequired>研究方向</nz-form-label>
             <nz-form-control>
-                <nz-select name="researchId" [(ngModel)]="researchId">
+                <nz-select nzId="researchId" formControlName="researchId" required>
                     <nz-option *ngFor="let research of researchList" [nzValue]="research.researchId"
                                [nzLabel]="research.researchName"></nz-option>
                 </nz-select>
@@ -29,7 +28,7 @@
     <ng-template #footerTpl>
         <div style="float: right">
             <button nz-button style="margin-right: 8px;" (click)="closeDrawer()">取消</button>
-            <button nz-button nzType="primary" (click)="uploadFile()">上传</button>
+            <button nz-button nzType="primary" (click)="uploadFile()" [disabled]="!uploadFileForm.valid">上传</button>
         </div>
     </ng-template>
 </nz-drawer>

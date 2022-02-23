@@ -5,8 +5,8 @@ import {Observable} from "rxjs";
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
 
-    API_URL: string = "http://47.108.237.121:8080";
-    // API_URL: string = "http://localhost:8080";
+    // API_URL: string = "http://47.108.237.121:8080";
+    API_URL: string = "http://localhost:8080";
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 

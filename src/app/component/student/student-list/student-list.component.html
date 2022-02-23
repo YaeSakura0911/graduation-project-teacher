@@ -19,7 +19,7 @@
             <button nzType="primary" (click)="openFormDrawer(0)" nz-button>添加学生</button>
         </div>
     </div>
-    <nz-table #basicTable [nzData]="studentList" [nzFrontPagination]="false">
+    <nz-table [nzData]="studentList" [nzFrontPagination]="false" #basicTable>
         <thead>
         <tr>
             <th>姓名</th>
