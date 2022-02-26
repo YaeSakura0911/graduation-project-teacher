@@ -50,7 +50,7 @@
                 <nz-divider nzType="vertical"></nz-divider>
                 <a (click)="openTaskDetailDrawer(task.taskId)">查看</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a [routerLink]="['/task/complete']" [queryParams]="{taskId: task.taskId}">批改</a>
+                <a [routerLink]="['/task/complete']" [queryParams]="{taskId: task.taskId}" [nzDisabled]="task.taskState != 2" nz-typography>批改</a>
                 <nz-divider nzType="vertical"></nz-divider>
                 <a [nzDisabled]="task.taskState == 2 || task.taskState == 3"
                    (click)="openTaskFormDrawer(task.taskId, task.researchId)" nz-typography>编辑</a>

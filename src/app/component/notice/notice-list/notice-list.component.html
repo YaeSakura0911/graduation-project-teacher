@@ -2,47 +2,68 @@
     <!-- 菜单 -->
     <div nz-row class="menu" [nzGutter]="16">
         <div [nzSpan]="4" nz-col>
-            <input placeholder="按关键字筛选" nz-input/>
+            <input placeholder="按关键字筛选" [(ngModel)]="noticeTitle"
+                   (ngModelChange)="queryNoticeList()" nz-input/>
         </div>
         <div [nzSpan]="4" nz-col>
-            <nz-select nzPlaceHolder="按通知优先级筛选">
+            <nz-select nzPlaceHolder="按通知优先级筛选" [(ngModel)]="noticePriority"
+                       (ngModelChange)="queryNoticeList()" nzAllowClear>
                 <nz-option [nzValue]="1" nzLabel="普通"></nz-option>
                 <nz-option [nzValue]="2" nzLabel="重要"></nz-option>
                 <nz-option [nzValue]="3" nzLabel="紧急"></nz-option>
             </nz-select>
         </div>
-        <div [nzSpan]="2" [nzOffset]="14" nz-col>
-            <button nzType="primary" nz-button>创建通知</button>
+        <div [nzSpan]="4" nz-col>
+            <nz-select nzPlaceHolder="按通知状态筛选" [(ngModel)]="releaseFlag"
+                       (ngModelChange)="queryNoticeList()" nzAllowClear>
+                <nz-option [nzValue]="1" nzLabel="未发布"></nz-option>
+                <nz-option [nzValue]="2" nzLabel="已发布"></nz-option>
+                <nz-option [nzValue]="3" nzLabel="已过期"></nz-option>
+            </nz-select>
+        </div>
+        <div [nzSpan]="2" [nzOffset]="10" nz-col>
+            <button nzType="primary" (click)="openNoticeFormDrawer(0)" nz-button>创建通知</button>
         </div>
     </div>
 
     <!-- 表格 -->
-    <nz-table #noticeTable [nzFrontPagination]="false">
+    <nz-table [nzData]="noticeList" [nzFrontPagination]="false" #noticeTable>
         <thead>
         <tr>
             <th>通知标题</th>
-            <th>研究方向</th>
             <th>通知优先级</th>
+            <th>发布日期</th>
+            <th>通知状态</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let notice of noticeTable.data">
             <td>{{notice.noticeTitle}}</td>
-            <td>{{notice.researchName}}</td>
             <td>
-                <nz-badge *ngIf="notice.taskState == 1" nzColor="blue" nzText="普通"></nz-badge>
-                <nz-badge *ngIf="notice.taskState == 2" nzColor="orange" nzText="重要"></nz-badge>
-                <nz-badge *ngIf="notice.taskState == 3" nzColor="red" nzText="紧急"></nz-badge>
+                <nz-badge *ngIf="notice.noticePriority == 1" nzColor="blue" nzText="普通"></nz-badge>
+                <nz-badge *ngIf="notice.noticePriority == 2" nzColor="orange" nzText="重要"></nz-badge>
+                <nz-badge *ngIf="notice.noticePriority == 3" nzColor="red" nzText="紧急"></nz-badge>
+            </td>
+            <td>{{notice.releaseDate | date: "yyyy-MM-dd"}}</td>
+            <td>
+                <nz-badge *ngIf="notice.releaseFlag == 0" nzStatus="default" nzText="未发布"></nz-badge>
+                <nz-badge *ngIf="notice.releaseFlag == 1" nzStatus="success" nzText="已发布"></nz-badge>
             </td>
             <td>
-                <a>发布</a>
+                <a nzPopconfirmTitle="确定发布当前通知？" nzPopconfirmPlacement="bottom"
+                   (nzOnConfirm)="updateNotice(notice.noticeId)" [nzDisabled]="notice.releaseFlag == 1"
+                   nz-popconfirm nz-typography>发布</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a>查看</a>
+                <a (click)="openNoticeDetailDrawer(notice.noticeId)">查看</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a>编辑</a>
+                <a (click)="openNoticeFormDrawer(notice.noticeId)" [nzDisabled]="notice.releaseFlag == 1"
+                   nz-typography>编辑</a>
                 <nz-divider nzType="vertical"></nz-divider>
-                <a>删除</a>
+                <a nzPopconfirmTitle="确定删除当前任务？" nzPopconfirmPlacement="bottom"
+                   (nzOnConfirm)="deleteNotice(notice.noticeId)" [nzDisabled]="notice.releaseFlag == 1"
+                   nz-popconfirm nz-typography>删除
+                </a>
             </td>
         </tr>
         </tbody>
@@ -50,5 +71,10 @@
 
     <br>
 
-    <nz-pagination nzShowSizeChanger></nz-pagination>
+    <nz-pagination [nzTotal]="total" [(nzPageIndex)]="pageIndex" [(nzPageSize)]="pageSize"
+                   (nzPageIndexChange)="queryNoticeList()" (nzPageSizeChange)="queryNoticeList()"
+                   nzShowSizeChanger></nz-pagination>
 </div>
+
+<app-notice-detail #noticeDetailDrawer></app-notice-detail>
+<app-notice-form (refreshPage)="queryNoticeList()" #noticeFormDrawer></app-notice-form>

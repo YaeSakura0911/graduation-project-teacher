@@ -6,6 +6,7 @@ import {QueryStudentListForm} from "../../../form/query-student-list-form";
 import {StudentService} from "../../../service/student.service";
 import {StorageUtil} from "../../../util/storage.util";
 import {TaskService} from "../../../service/task.service";
+import {differenceInCalendarDays} from "date-fns";
 
 @Component({
     selector: 'app-task-release',
@@ -19,6 +20,9 @@ export class TaskReleaseComponent implements OnInit {
     researchId: number = 0;
     modalVisible: boolean = false;
     studentList: Student[] = [];
+    today: Date = new Date();
+    disabledDate = (current: Date): boolean =>
+        differenceInCalendarDays(current, this.today) < 0;
 
     @Output()
     refreshPage = new EventEmitter<any>();

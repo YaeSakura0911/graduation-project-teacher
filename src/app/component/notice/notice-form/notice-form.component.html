@@ -1,0 +1,46 @@
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="560" [nzVisible]="drawerVisible"
+           [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="closeDrawer()">
+    <form [formGroup]="shareNoticeForm" *nzDrawerContent nz-form>
+        <nz-form-item>
+            <nz-form-label nzFor="taskName" [nzSpan]="4" nzRequired>通知标题</nz-form-label>
+            <nz-form-control [nzErrorTip]="titleError" [nzSpan]="20">
+                <input type="text" id="taskName" formControlName="noticeTitle" nz-input/>
+                <ng-template #titleError let-control>
+                    <ng-container *ngIf="control.hasError('required')">标题不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">任务名称最大长度为50</ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="researchId" [nzSpan]="4" nzRequired>优先级</nz-form-label>
+            <nz-form-control [nzSpan]="20">
+                <nz-select nzId="researchId" formControlName="noticePriority">
+                    <nz-option [nzValue]="1" nzLabel="普通"></nz-option>
+                    <nz-option [nzValue]="2" nzLabel="重要"></nz-option>
+                    <nz-option [nzValue]="3" nzLabel="紧急"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzFor="taskContent" [nzSpan]="4" nzRequired>任务内容</nz-form-label>
+            <nz-form-control [nzErrorTip]="contentError" [nzSpan]="20">
+                <nz-textarea-count [nzMaxCharacterCount]="255">
+                    <textarea id="taskContent" formControlName="noticeContent" [nzAutosize]="{minRows: 4}"
+                              nz-input></textarea>
+                </nz-textarea-count>
+                <ng-template #contentError let-control>
+                    <ng-container *ngIf="control.hasError('required')">任务内容不能为空</ng-container>
+                    <ng-container *ngIf="control.hasError('maxlength')">任务内容最大长度为255</ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button style="margin-right: 8px;" (click)="closeDrawer()" nz-button>取消</button>
+            <button nzType="primary" (click)="isCreate ? createNotice() : updateNotice()"
+                    [disabled]="!shareNoticeForm.valid" nz-button>保存
+            </button>
+        </div>
+    </ng-template>
+</nz-drawer>

@@ -5,8 +5,8 @@
                 <nz-form-label nzFor="endTime" nzRequired>截止时间</nz-form-label>
                 <nz-form-control>
                     <nz-date-picker nzId="endTime" formControlName="endTime" nzFormat="yyyy-MM-dd HH:mm:ss"
-                                    nzPlaceHolder="请选择截止日期"
-                                    nzShowTime></nz-date-picker>
+                                    nzPlaceHolder="请选择截止日期" [nzDisabledDate]="disabledDate" nzShowTime>
+                    </nz-date-picker>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>

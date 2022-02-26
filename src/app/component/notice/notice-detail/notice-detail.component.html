@@ -1,0 +1,19 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="drawerVisible" [nzWidth]="560" nzPlacement="right" nzTitle="任务详情"
+           (nzOnClose)="closeDrawer()">
+    <ng-container *nzDrawerContent>
+        <nz-descriptions [nzColumn]="1">
+            <nz-descriptions-item nzTitle="通知标题">{{ noticeTitle }}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="通知优先级">
+                <nz-badge *ngIf="noticePriority == 1" nzColor="blue" nzText="普通"></nz-badge>
+                <nz-badge *ngIf="noticePriority == 2" nzColor="orange" nzText="重要"></nz-badge>
+                <nz-badge *ngIf="noticePriority == 3" nzColor="red" nzText="紧急"></nz-badge>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="通知状态">
+                <nz-badge *ngIf="releaseFlag == 0" nzStatus="default" nzText="未发布"></nz-badge>
+                <nz-badge *ngIf="releaseFlag == 1" nzStatus="success" nzText="已发布"></nz-badge>
+            </nz-descriptions-item>
+            <nz-descriptions-item nzTitle="发布时间">{{releaseDate | date: "yyyy-MM-dd"}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="通知内容">{{noticeContent}}</nz-descriptions-item>
+        </nz-descriptions>
+    </ng-container>
+</nz-drawer>
